@@ -1,17 +1,24 @@
 import pandas as pd
 import streamlit as st
 
+# reading the source file
 df = pd.read_csv("Physical data with coverage.csv")
+
+# an apt heading
 st.header("Fabric Physical Parameters Predictor")
 
-total_articles = df['Article No.'].unique()
-s_article = st.selectbox("Select Article", total_articles)
-article_df = df[df['Article No.']==s_article]
+# article selection
+all_articles = df['Article No.'].unique()
+select_article = st.selectbox("Select Article", all_articles)
+article_df = df[df['Article No.']==select_article]
 
 col1, col2, col3 = st.columns(3)
-article = col1.metric('', article_df.Weave.unique()[0])
-finish = col2.selectbox("Finish Code", article_df.Finish.unique())
-style = col3.selectbox("Style", article_df.Style.unique())
-result_df = st.dataframe(article_df[['Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM']])
+article = col1.metric('Weave', article_df.Weave.unique()[0])
+finish = col2.selectbox("Select Finish Code", article_df.Finish.unique())
+style = col3.selectbox("Select Style", article_df.Style.unique())
+result_df = df.loc[(df['Article No.']==select_article)&(df['Finish']==finish)&(df['Style']==style)]
+result_df_display = st.dataframe(result_df[['Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM']])
 
-#st.dataframe(data=article_df)
+
+
+#st.dataframe(data=result_df)
