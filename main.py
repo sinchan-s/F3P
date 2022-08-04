@@ -14,10 +14,11 @@ article_df = df[df['Article No.']==select_article]
 
 col1, col2, col3 = st.columns(3)
 article = col1.metric('Weave', article_df.Weave.unique()[0])
+count = col1.metric('Count',article_df['Warp*Weft'][0])
 finish = col2.selectbox("Select Finish Code", article_df.Finish.unique())
-style = col3.selectbox("Select Style", article_df.Style.unique())
+style = col2.selectbox("Select Style", article_df.Style.unique())
 result_df = df.loc[(df['Article No.']==select_article)&(df['Finish']==finish)&(df['Style']==style)]
-result_df_display = st.dataframe(result_df[['Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM']])
+result_df_display = st.dataframe(result_df[['EPI','PPI', 'F_Width', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM']])
 
 
 
