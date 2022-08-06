@@ -1,5 +1,7 @@
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
+import plotly.express as px
 
 # reading the source file
 df = pd.read_csv("Physical data with coverage.csv")
@@ -28,12 +30,16 @@ article = col1.metric('Weave', article_df.Weave.unique()[0])
 #count_weft = col1.metric('Weft Count',weft_count)
 #count_const = col1.metric('Const', count)
 finish = col2.selectbox("Select Finish Code", article_df.Finish.unique())
-style = col2.selectbox("Select Style", article_df.Style.unique())
+style = col3.selectbox("Select Style", article_df.Style.unique())
 
 
 # final display dataframe
 result_df = df.loc[(df['Article No.']==select_article)&(df['Finish']==finish)&(df['Style']==style)]
 result_df_display = st.dataframe(result_df[['Warp*Weft', 'EPI','PPI', 'Finish Width', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM']])
 
+fig1 = px.scatter(result_df, x='EPI', y='PPI')
+st.plotly_chart(fig1)
 
+fig2 = px.scatter(result_df, x='Warp Tensile', y='Weft Tensile')
+st.plotly_chart(fig2)
 #st.dataframe(data=count)
