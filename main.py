@@ -44,17 +44,27 @@ result_df_display = st.dataframe(result_df[['Warp*Weft', 'EPI','PPI', 'Finish Wi
 # graphical section
 col1, col2 = st.columns(2)
 fig1 = plt.figure(figsize=(8, 3))
-sns.boxplot(data=result_df, x='EPI')
+sns.violinplot(data=result_df, x='EPI', linewidth=3)
 col1.pyplot(fig1)
 
 fig2 = plt.figure(figsize=(8, 3))
-sns.boxplot(data=result_df, x='PPI')
+sns.violinplot(data=result_df, x='PPI', linewidth=3)
 col2.pyplot(fig2)
 
+col1, col2 = st.columns(2)
 fig3 = plt.figure(figsize=(8, 3))
-sns.histplot(data=result_df, x='Warp Tensile', y='Weft Tensile', hue='Coverage group')
+sns.scatterplot(data=result_df, x='Warp Tensile', y='Weft Tensile', hue='Coverage group', s=100, alpha=0.75)
 col1.pyplot(fig3)
 
 fig4 = plt.figure(figsize=(8, 3))
-sns.histplot(data=result_df, x='Warp Tear', y='Weft Tear', hue='Coverage group')
+sns.scatterplot(data=result_df, x='Warp Tear', y='Weft Tear', hue='Coverage group', s=100, alpha=0.75)
 col2.pyplot(fig4)
+
+col1, col2 = st.columns(2)
+fig5 = plt.figure(figsize=(8, 3))
+sns.lineplot(data=result_df, x='Growth')
+col1.pyplot(fig5)
+
+fig6 = plt.figure(figsize=(8, 3))
+sns.lineplot(data=result_df, x='Elongation')
+col2.pyplot(fig6)
