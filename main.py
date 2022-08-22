@@ -53,11 +53,11 @@ col2.pyplot(fig2)
 
 col1, col2 = st.columns(2)
 fig3 = plt.figure(figsize=(8, 3))
-sns.scatterplot(data=result_df, x='Warp Tensile', y='Weft Tensile', hue='Coverage group', s=100, alpha=0.75).set(title='Warp vs Weft Tensile range')
+sns.scatterplot(data=result_df, x='Warp Tensile', y='Weft Tensile', hue='Coverage group', s=100, alpha=0.7).set(title='Warp vs Weft Tensile range')
 col1.pyplot(fig3)
 
 fig4 = plt.figure(figsize=(8, 3))
-sns.scatterplot(data=result_df, x='Warp Tear', y='Weft Tear', hue='Coverage group', s=100, alpha=0.75).set(title='Warp vs Weft Tear range')
+sns.scatterplot(data=result_df, x='Warp Tear', y='Weft Tear', marker=",", hue='Coverage group', s=100, alpha=0.7).set(title='Warp vs Weft Tear range')
 col2.pyplot(fig4)
 
 col1, col2 = st.columns(2)
