@@ -44,27 +44,27 @@ result_df_display = st.dataframe(result_df[['Warp*Weft', 'EPI','PPI', 'Finish Wi
 # graphical section
 col1, col2 = st.columns(2)
 fig1 = plt.figure(figsize=(8, 3))
-sns.violinplot(data=result_df, x='EPI', linewidth=3).set(title='EPI range')
+sns.boxplot(data=result_df, x='Weft Tear', y='Coverage group', linewidth=3).set(title='Weft Tear range')
 col1.pyplot(fig1)
 
 fig2 = plt.figure(figsize=(8, 3))
-sns.violinplot(data=result_df, x='PPI', linewidth=3).set(title='PPI range')
+sns.boxplot(data=result_df, x='Warp Tear', y='Coverage group', linewidth=3).set(title='Warp Tear range')
 col2.pyplot(fig2)
 
 col1, col2 = st.columns(2)
 fig3 = plt.figure(figsize=(8, 3))
-sns.scatterplot(data=result_df, x='Warp Tensile', y='Weft Tensile', hue='Coverage group', s=100, alpha=0.7).set(title='Warp vs Weft Tensile range')
+sns.boxplot(data=result_df, x='Weft Tensile', y='Coverage group', linewidth=3).set(title='Weft Tensile range')
 col1.pyplot(fig3)
 
 fig4 = plt.figure(figsize=(8, 3))
-sns.scatterplot(data=result_df, x='Warp Tear', y='Weft Tear', marker=",", hue='Coverage group', s=100, alpha=0.7).set(title='Warp vs Weft Tear range')
+sns.boxplot(data=result_df, x='Warp Tensile', y='Coverage group', linewidth=3).set(title='Warp Tensile range')
 col2.pyplot(fig4)
 
 col1, col2 = st.columns(2)
-fig5 = plt.figure(figsize=(8, 3))
-sns.lineplot(data=result_df, x='Growth').set(title='Growth range')
-col1.pyplot(fig5)
+fig3 = plt.figure(figsize=(8, 3))
+sns.boxplot(data=result_df, x='Growth', y='Coverage group', linewidth=3).set(title='Growth range')
+col1.pyplot(fig3)
 
-fig6 = plt.figure(figsize=(8, 3))
-sns.lineplot(data=result_df, x='Elongation').set(title='Elongation range')
-col2.pyplot(fig6)
+fig4 = plt.figure(figsize=(8, 3))
+sns.boxplot(data=result_df, x='Elongation', y='Coverage group', linewidth=3).set(title='Elongation range')
+col2.pyplot(fig4)
