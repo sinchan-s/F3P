@@ -37,7 +37,7 @@ finish = col2.selectbox("Select Finish Code", article_df.Finish.unique())
 style = col3.selectbox("Select Style", article_df.Style.unique())
 
 
-# final display dataframe
+# dataframe display
 result_df = df.loc[(df['Article No.']==select_article)&(df['Finish']==finish)&(df['Style']==style)]
 result_df_display = st.dataframe(result_df[['Warp*Weft', 'EPI','PPI', 'Finish Width', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM' ]])
 
