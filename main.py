@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 
 
-sns.set_style('whitegrid')
+sns.set_style('darkgrid')
 
 # reading the source file
 df = pd.read_csv("Physical data with coverage2.csv")
@@ -44,20 +44,20 @@ result_df_display = st.dataframe(result_df[['Warp*Weft', 'EPI','PPI', 'Finish Wi
 # graphical section
 col1, col2 = st.columns(2)
 fig1 = plt.figure(figsize=(8, 3))
-weft_tear = sns.boxplot(data=result_df, x='Weft Tear', y='Coverage group', linewidth=3, whis=1, palette='flare').set(title='Weft Tear range')
+weft_tear = sns.boxplot(data=result_df, x='Weft Tear', y='Coverage group', width=0.5, linewidth=2, whis=1, palette='Set1').set(title='Weft Tear range')
 col1.pyplot(fig1)
 
 fig2 = plt.figure(figsize=(8, 3))
-warp_tear = sns.boxplot(data=result_df, x='Warp Tear', y='Coverage group', linewidth=3, whis=1, palette='winter').set(title='Warp Tear range')
+warp_tear = sns.boxplot(data=result_df, x='Warp Tear', y='Coverage group', width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tear range')
 col2.pyplot(fig2)
 
 col1, col2 = st.columns(2)
 fig3 = plt.figure(figsize=(8, 3))
-weft_tens = sns.boxplot(data=result_df, y='Weft Tensile', x='Coverage group', linewidth=2, palette='flare', whis=1).set(title='Weft Tensile range')
+weft_tens = sns.boxplot(data=result_df, y='Weft Tensile', x='Coverage group', width=0.5, linewidth=2, palette='Set1', whis=1).set(title='Weft Tensile range')
 col1.pyplot(fig3)
 
 fig4 = plt.figure(figsize=(8, 3))
-warp_tens = sns.boxplot(data=result_df, y='Warp Tensile', x='Coverage group', linewidth=3, whis=1, palette='winter').set(title='Warp Tensile range')
+warp_tens = sns.boxplot(data=result_df, y='Warp Tensile', x='Coverage group', width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tensile range')
 col2.pyplot(fig4)
 
 col1, col2 = st.columns(2)
