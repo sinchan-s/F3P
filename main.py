@@ -4,44 +4,34 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.express as px
 
-
+# graph styling
 sns.set_style('darkgrid')
 
 # reading the source file
 df = pd.read_csv("Physical data with coverage2.csv")
 
-
 # an apt heading
 st.header("Fabric Physical Parameters Predictor")
-
 
 # article selection
 all_articles = df['Article No.'].unique()
 select_article = st.selectbox("Select Article", all_articles)
 article_df = df[df['Article No.']==select_article]
 
-
 # warp-weft count segregation and identification
-#count = article_df['Warp*Weft'][0].split('*')
-#warp_count = count[0]
-#weft_count = count[1]
 count = article_df['Warp*Weft']
 
 # column-wise display & selection
 col1, col2, col3 = st.columns(3)
 article = col1.metric('Weave', article_df.Weave.unique()[0])
-#count_warp = col1.metric('Warp Count',warp_count)
-#count_weft = col1.metric('Weft Count',weft_count)
-#count_const = col1.metric('Const', count)
 finish = col2.selectbox("Select Finish Code", article_df.Finish.unique())
 style = col3.selectbox("Select Style", article_df.Style.unique())
-
 
 # dataframe display
 result_df = df.loc[(df['Article No.']==select_article)&(df['Finish']==finish)&(df['Style']==style)]
 result_df_display = st.dataframe(result_df[['Warp*Weft', 'EPI','PPI', 'Finish Width', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM' ]])
 
-# graphical section
+# graphical sections divided into 2 columns
 col1, col2 = st.columns(2)
 fig1 = plt.figure(figsize=(8, 3))
 weft_tear = sns.boxplot(data=result_df, x='Weft Tear', y='Coverage group', width=0.5, linewidth=2, whis=1, palette='Set1').set(title='Weft Tear range')
