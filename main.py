@@ -26,14 +26,13 @@ article = col1.metric('Weave', article_df.Weave.unique()[0])
 finish = col2.selectbox("Select Finish Code", article_df.Finish.unique())
 style = col3.selectbox("Select Style", article_df.Style.unique())
 
-# dataframe display
+# df is display
 result_df = df.loc[(df['Article No.']==select_article)&(df['Finish']==finish)&(df['Style']==style)]
-result_df_display = st.dataframe(result_df[['Warp*Weft', 'EPI','PPI', 'Finish Width', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM' ]])
 
 # graphical sections divided into 2 columns
 col1, col2 = st.columns(2)
 fig1 = plt.figure(figsize=(8, 3))
-weft_tear = sns.boxplot(data=result_df, x='Weft Tear', y='Coverage group', width=0.5, linewidth=2, whis=1, palette='Set1').set(title='Weft Tear range')
+weft_tear = sns.boxplot(data=result_df, x='Weft Tear', y='Coverage group', width=0.5, linewidth=2, whis=1, palette='rocket').set(title='Weft Tear range')
 col1.pyplot(fig1)
 
 fig2 = plt.figure(figsize=(8, 3))
@@ -42,7 +41,7 @@ col2.pyplot(fig2)
 
 col1, col2 = st.columns(2)
 fig3 = plt.figure(figsize=(8, 3))
-weft_tens = sns.boxplot(data=result_df, y='Weft Tensile', x='Coverage group', width=0.5, linewidth=2, palette='Set1', whis=1).set(title='Weft Tensile range')
+weft_tens = sns.boxplot(data=result_df, y='Weft Tensile', x='Coverage group', width=0.5, linewidth=2, palette='rocket', whis=1).set(title='Weft Tensile range')
 col1.pyplot(fig3)
 
 fig4 = plt.figure(figsize=(8, 3))
@@ -51,9 +50,13 @@ col2.pyplot(fig4)
 
 col1, col2 = st.columns(2)
 fig5 = plt.figure(figsize=(8, 3))
-growth = sns.swarmplot(data=result_df, x='Growth', y='Coverage group', linewidth=3).set(title='Growth range')
+growth = sns.histplot(data=result_df, x='Growth', y='Coverage group').set(title='Growth range')
 col1.pyplot(fig5)
 
 fig6 = plt.figure(figsize=(8, 3))
-elong = sns.swarmplot(data=result_df, x='Elongation', y='Coverage group', linewidth=3).set(title='Elongation range')
+elong = sns.histplot(data=result_df, x='Elongation', y='Coverage group').set(title='Elongation range')
 col2.pyplot(fig6)
+
+# dataframe display
+st.subheader(f'Article dataframe: {select_article}')
+result_df_display = st.dataframe(result_df[['Warp*Weft', 'EPI','PPI', 'Finish Width', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM' ]])
