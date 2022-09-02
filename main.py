@@ -12,10 +12,17 @@ df = pd.read_csv("Physical data with coverage2.csv")
 # an apt heading
 st.header("Fabric Physical Parameters Predictor")
 
-# article selection
+# article selection & count display
+col1, col2, col3 = st.columns(3)
 all_articles = df['Article No.'].unique()
-select_article = st.selectbox("Select Article", all_articles)
+select_article = col1.selectbox("Select Article", all_articles)
 article_df = df[df['Article No.']==select_article]
+
+count_data = article_df['Warp*Weft'].unique()[0].split("*")
+warp_count = count_data[0]
+weft_count = count_data[1]
+count = col2.metric('Warp Count/Composition', warp_count)
+count = col3.metric('Weft Count/Composition', weft_count)
 
 # warp-weft count segregation and identification
 count = article_df['Warp*Weft']
@@ -30,6 +37,7 @@ style = col3.selectbox("Select Style", article_df.Style.unique())
 result_df = df.loc[(df['Article No.']==select_article)&(df['Finish']==finish)&(df['Style']==style)]
 
 # graphical sections divided into 2 columns
+st.subheader(f'Tear Strength Parameters')
 col1, col2 = st.columns(2)
 fig1 = plt.figure(figsize=(8, 3))
 weft_tear = sns.boxplot(data=result_df, x='Weft Tear', y='Coverage group', width=0.5, linewidth=2, whis=1, palette='rocket').set(title='Weft Tear range')
@@ -39,6 +47,7 @@ fig2 = plt.figure(figsize=(8, 3))
 warp_tear = sns.boxplot(data=result_df, x='Warp Tear', y='Coverage group', width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tear range')
 col2.pyplot(fig2)
 
+st.subheader(f'Tensile Strength Parameters')
 col1, col2 = st.columns(2)
 fig3 = plt.figure(figsize=(8, 3))
 weft_tens = sns.boxplot(data=result_df, y='Weft Tensile', x='Coverage group', width=0.5, linewidth=2, palette='rocket', whis=1).set(title='Weft Tensile range')
@@ -48,13 +57,14 @@ fig4 = plt.figure(figsize=(8, 3))
 warp_tens = sns.boxplot(data=result_df, y='Warp Tensile', x='Coverage group', width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tensile range')
 col2.pyplot(fig4)
 
+st.subheader(f'Stretch Parameters')
 col1, col2 = st.columns(2)
 fig5 = plt.figure(figsize=(8, 3))
-growth = sns.histplot(data=result_df, x='Growth', y='Coverage group').set(title='Growth range')
+growth = sns.scatterplot(data=result_df, x='Growth', y='Coverage group', hue='Coverage group', palette='rocket').set(title='Growth range')
 col1.pyplot(fig5)
 
 fig6 = plt.figure(figsize=(8, 3))
-elong = sns.histplot(data=result_df, x='Elongation', y='Coverage group').set(title='Elongation range')
+elong = sns.scatterplot(data=result_df, x='Elongation', y='Coverage group', hue='Coverage group', palette='winter').set(title='Elongation range')
 col2.pyplot(fig6)
 
 # dataframe display
