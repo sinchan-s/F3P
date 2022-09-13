@@ -10,7 +10,7 @@ sns.set_style('darkgrid')
 
 
 # reading the source file
-df = pd.read_csv("Physical data with coverage2.csv")
+df = pd.read_csv("main_data.csv")
 cover_df = pd.read_csv("Coverage data.csv")
 
 
@@ -22,14 +22,22 @@ st.header("Fabric Physical Parameters Predictor")
 col1, col2, col3 = st.columns(3)
 
 all_articles = df['Article No.'].unique()
-select_article = col1.selectbox("Select Article:", all_articles)
-article_df = df[df['Article No.']==select_article]
+article_selectbox = col1.selectbox("Select Article:", all_articles)
+article_df = df[df['Article No.']==article_selectbox]
+# warp-weft display
 count_data = article_df['Warp*Weft'].unique()[0].split("*")
 warp_count = count_data[0]
 weft_count = count_data[1]
 count1 = col2.metric('Warp Count/Composition', warp_count)
 count2 = col3.metric('Weft Count/Composition', weft_count)
-
+# more finer selection
+all_weaves = df['Weave'].unique()
+weave_selectbox = col1.selectbox("Different Weaves:", all_weaves)
+df['warp'], df['weft'] = df['Warp*Weft'].str.split("*",1).str
+all_warp_list = df['warp'].unique()
+warp_selectbox = col2.selectbox("Warp select:", all_warp_list)
+all_weft_list = df['weft'].unique()
+weft_selectbox = col3.selectbox("Weft select:", all_weft_list)
 
 # column-wise split: weave display & finsih-style selection
 col1, col2, col3 = st.columns(3)
@@ -40,7 +48,7 @@ style = col3.selectbox("Select Style:", article_df.Style.unique())
 
 
 # dataframes merger
-selection_df = df.loc[(df['Article No.']==select_article)&(df['Finish']==finish)&(df['Style']==style)]
+selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Finish']==finish)&(df['Style']==style)]
 merged_df = selection_df.merge(cover_df, how='left', left_on=['Print Design', 'Print Color'], right_on=['DESIGN NUMBER', 'Colour Code'])
 
 
@@ -80,5 +88,5 @@ col2.pyplot(fig6)
 
 
 # article dataframe display
-st.subheader(f'Article raw data: {select_article}')
+st.subheader(f'Article raw data: {article_selectbox}')
 merged_df_display = st.dataframe(merged_df[[ 'EPI','PPI', 'Finish Width', 'Total coverage', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM', 'Warp*Weft']])
