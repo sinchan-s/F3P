@@ -57,22 +57,22 @@ st.subheader(f'Tear Strength Parameter plots:')
 col1, col2 = st.columns(2)
 # Weft tear plot
 fig1 = plt.figure(figsize=(8, 3))
-weft_tear = sns.boxplot(data=selection_df, x='Weft Tear', y='Coverage group', width=0.5, linewidth=2, whis=1, palette='rocket').set(title='Weft Tear range')
+weft_tear = sns.boxplot(data=selection_df, x='Weft Tear', y='Coverage group', showmeans=True, meanprops={"marker":"o", "markerfacecolor":"white", "markeredgecolor":"black", "markersize":"10"}, showcaps=False, width=0.5, linewidth=2, whis=1, palette='rocket').set(title='Weft Tear range')
 col1.pyplot(fig1)
 # Warp tear plot
 fig2 = plt.figure(figsize=(8, 3))
-warp_tear = sns.boxplot(data=selection_df, x='Warp Tear', y='Coverage group', width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tear range')
+warp_tear = sns.boxplot(data=selection_df, x='Warp Tear', y='Coverage group', showmeans=True, meanprops={"marker":"o", "markerfacecolor":"white", "markeredgecolor":"black", "markersize":"10"},showcaps=False, width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tear range')
 col2.pyplot(fig2)
 
 st.subheader(f'Tensile Strength Parameter plots:')
 col1, col2 = st.columns(2)
 # Weft tensile plot
 fig3 = plt.figure(figsize=(8, 3))
-weft_tens = sns.boxplot(data=selection_df, y='Weft Tensile', x='Coverage group', width=0.5, linewidth=2, palette='rocket', whis=1).set(title='Weft Tensile range')
+weft_tens = sns.boxplot(data=selection_df, y='Weft Tensile', x='Coverage group', showmeans=True, meanprops={"marker":"o", "markerfacecolor":"white", "markeredgecolor":"black", "markersize":"10"},showcaps=False, width=0.5, linewidth=2, palette='rocket', whis=1).set(title='Weft Tensile range')
 col1.pyplot(fig3)
 # Warp tensile plot
 fig4 = plt.figure(figsize=(8, 3))
-warp_tens = sns.boxplot(data=selection_df, y='Warp Tensile', x='Coverage group', width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tensile range')
+warp_tens = sns.boxplot(data=selection_df, y='Warp Tensile', x='Coverage group', showmeans=True, meanprops={"marker":"o", "markerfacecolor":"white", "markeredgecolor":"black", "markersize":"10"},showcaps=False, width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tensile range')
 col2.pyplot(fig4)
 
 st.subheader(f'Stretch Parameter plots:')
