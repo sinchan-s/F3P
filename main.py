@@ -51,40 +51,34 @@ style = col3.selectbox("Select Style:", article_df.Style.unique())
 selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Finish']==finish)&(df['Style']==style)]
 merged_df = selection_df.merge(cover_df, how='left', left_on=['Print Design', 'Print Color'], right_on=['DESIGN NUMBER', 'Colour Code'])
 
+# plotting function
+def box_plot(df_select, col_num, x, y, palette, title):
+    fig = plt.figure(figsize=(8, 3))
+    value_to_plot = sns.boxplot(data=df_select, x=x, y=y, showmeans=True, meanprops={"marker":"|", "markerfacecolor":"white", "markeredgecolor":"darkviolet", "markersize":"300"}, showcaps=False, width=0.5, linewidth=2, whis=1, palette=palette).set(title=title)
+    #fig.plot(x = 13, color = 'b', label = '12')
+    col_num.pyplot(fig)
 
 # column-wise split: graphical charts
 st.subheader(f'Tear Strength Parameter plots:')
 col1, col2 = st.columns(2)
-# Weft tear plot
-fig1 = plt.figure(figsize=(8, 3))
-weft_tear = sns.boxplot(data=selection_df, x='Weft Tear', y='Coverage group', showmeans=True, meanprops={"marker":"o", "markerfacecolor":"white", "markeredgecolor":"black", "markersize":"10"}, showcaps=False, width=0.5, linewidth=2, whis=1, palette='rocket').set(title='Weft Tear range')
-col1.pyplot(fig1)
-# Warp tear plot
-fig2 = plt.figure(figsize=(8, 3))
-warp_tear = sns.boxplot(data=selection_df, x='Warp Tear', y='Coverage group', showmeans=True, meanprops={"marker":"o", "markerfacecolor":"white", "markeredgecolor":"black", "markersize":"10"},showcaps=False, width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tear range')
-col2.pyplot(fig2)
+
+weft_tear = box_plot(selection_df, col1, 'Weft Tear', 'Coverage group', 'rocket', 'Weft Tear Range')
+
+warp_tear = box_plot(selection_df, col2, 'Warp Tear', 'Coverage group', 'winter', 'Warp Tear Range')
 
 st.subheader(f'Tensile Strength Parameter plots:')
 col1, col2 = st.columns(2)
-# Weft tensile plot
-fig3 = plt.figure(figsize=(8, 3))
-weft_tens = sns.boxplot(data=selection_df, y='Weft Tensile', x='Coverage group', showmeans=True, meanprops={"marker":"o", "markerfacecolor":"white", "markeredgecolor":"black", "markersize":"10"},showcaps=False, width=0.5, linewidth=2, palette='rocket', whis=1).set(title='Weft Tensile range')
-col1.pyplot(fig3)
-# Warp tensile plot
-fig4 = plt.figure(figsize=(8, 3))
-warp_tens = sns.boxplot(data=selection_df, y='Warp Tensile', x='Coverage group', showmeans=True, meanprops={"marker":"o", "markerfacecolor":"white", "markeredgecolor":"black", "markersize":"10"},showcaps=False, width=0.5, linewidth=2, whis=1, palette='winter').set(title='Warp Tensile range')
-col2.pyplot(fig4)
+
+weft_tensile = box_plot(selection_df, col1, 'Weft Tensile', 'Coverage group',  'rocket', 'Weft Tensile Range')
+
+warp_tensile = box_plot(selection_df, col2, 'Warp Tensile', 'Coverage group',  'winter', 'Warp Tensile Range')
 
 st.subheader(f'Stretch Parameter plots:')
 col1, col2 = st.columns(2)
-# Growth plot
-fig5 = plt.figure(figsize=(8, 3))
-growth = sns.scatterplot(data=selection_df, x='Growth', y='Coverage group', hue='Coverage group', palette='rocket').set(title='Growth range')
-col1.pyplot(fig5)
-# Elongation plot
-fig6 = plt.figure(figsize=(8, 3))
-elong = sns.scatterplot(data=selection_df, x='Elongation', y='Coverage group', hue='Coverage group', palette='winter').set(title='Elongation range')
-col2.pyplot(fig6)
+
+growth = box_plot(selection_df, col1, 'Growth', 'Coverage group', 'rocket', 'Growth Range')
+
+elongation = box_plot(selection_df, col2, 'Elongation', 'Coverage group', 'winter', 'Elogation Range')
 
 
 # article dataframe display
