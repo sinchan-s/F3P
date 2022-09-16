@@ -54,7 +54,9 @@ merged_df = selection_df.merge(cover_df, how='left', left_on=['Print Design', 'P
 # plotting function
 def box_plot(df_select, col_num, x, y, palette, title):
     fig = plt.figure(figsize=(8, 3))
-    value_to_plot = sns.boxplot(data=df_select, x=x, y=y, showmeans=True, meanprops={"marker":"|", "markerfacecolor":"white", "markeredgecolor":"darkviolet", "markersize":"300"}, showcaps=False, width=0.5, linewidth=2, whis=1, palette=palette).set(title=title)
+    value_to_plot = sns.boxplot(data=df_select, x=x, y=y, showcaps=False, width=0.5, linewidth=2, whis=1, palette=palette).set(title=title)
+    mean_val = df_select[x].mean()
+    plt.axvline(mean_val, c='m', ls='--', lw=3)
     #fig.plot(x = 13, color = 'b', label = '12')
     col_num.pyplot(fig)
 
