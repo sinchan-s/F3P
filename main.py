@@ -85,4 +85,4 @@ elongation = box_plot(selection_df, col2, 'Elongation', 'Coverage group', 'winte
 
 # article dataframe display
 st.subheader(f'Article raw data: {article_selectbox}')
-merged_df_display = st.dataframe(merged_df[[ 'EPI','PPI', 'Finish Width', 'Total coverage', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'GSM', 'Warp*Weft']])
+merged_df_display = st.dataframe(merged_df[[ 'EPI','PPI', 'GSM', 'Total coverage', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'Finish Width2', 'Warp*Weft']])
