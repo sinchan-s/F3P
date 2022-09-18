@@ -30,14 +30,6 @@ warp_count = count_data[0]
 weft_count = count_data[1]
 count1 = col2.metric('Warp Count/Composition', warp_count)
 count2 = col3.metric('Weft Count/Composition', weft_count)
-# more finer selection
-all_weaves = df['Weave'].unique()
-weave_selectbox = col1.selectbox("Different Weaves:", all_weaves)
-df['warp'], df['weft'] = df['Warp*Weft'].str.split("*",1).str
-all_warp_list = df['warp'].unique()
-warp_selectbox = col2.selectbox("Warp select:", all_warp_list)
-all_weft_list = df['weft'].unique()
-weft_selectbox = col3.selectbox("Weft select:", all_weft_list)
 
 # column-wise split: weave display & finsih-style selection
 col1, col2, col3 = st.columns(3)
