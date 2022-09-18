@@ -4,6 +4,13 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+# basic configurations
+st.set_page_config(
+    page_title="F3P Main",
+    page_icon="📊",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 
 # seaborn graph styling
 sns.set_style('darkgrid')
@@ -18,25 +25,25 @@ cover_df = pd.read_csv("Coverage data.csv")
 st.header("Fabric Physical Parameters Predictor")
 
 
-# column-wise split: article selection & warp-weft count display
+# column-wise split: article selection & finsih-style selection
 col1, col2, col3 = st.columns(3)
 
 all_articles = df['Article No.'].unique()
 article_selectbox = col1.selectbox("Select Article:", all_articles)
 article_df = df[df['Article No.']==article_selectbox]
-# warp-weft display
-count_data = article_df['Warp*Weft'].unique()[0].split("*")
-warp_count = count_data[0]
-weft_count = count_data[1]
-count1 = col2.metric('Warp Count/Composition', warp_count)
-count2 = col3.metric('Weft Count/Composition', weft_count)
+finish = col2.selectbox("Select Finish Code:", article_df.Finish.unique())
+style = col3.selectbox("Select Style:", article_df.Style.unique())
 
-# column-wise split: weave display & finsih-style selection
+
+# column-wise split: weave display & warp-weft count display
 col1, col2, col3 = st.columns(3)
 
 article = col1.metric('Weave', article_df.Weave.unique()[0])
-finish = col2.selectbox("Select Finish Code:", article_df.Finish.unique())
-style = col3.selectbox("Select Style:", article_df.Style.unique())
+count_data = article_df['Warp*Weft'].unique()[0].split("*")
+warp_count = count_data[0]
+weft_count = count_data[1]
+count_wp = col2.metric('Warp Count/Composition', warp_count)
+count_wf = col3.metric('Weft Count/Composition', weft_count)
 
 
 # dataframes merger

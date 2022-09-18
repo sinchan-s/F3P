@@ -3,6 +3,13 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+# basic configurations
+st.set_page_config(
+    page_title="F3P Main:Range Select",
+    page_icon="🔍",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 
 # seaborn graph styling
 sns.set_style('darkgrid')
