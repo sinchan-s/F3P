@@ -48,7 +48,6 @@ count_wf = col3.metric('Weft Count/Composition', weft_count)
 
 # dataframes merger
 selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Finish']==finish)&(df['Style']==style)]
-merged_df = selection_df.merge(cover_df, how='left', left_on=['Print Design', 'Print Color'], right_on=['DESIGN NUMBER', 'Colour Code'])
 
 # plotting function
 def box_plot(df_select, col_num, x, y, palette, title):
@@ -62,26 +61,26 @@ def box_plot(df_select, col_num, x, y, palette, title):
 # column-wise split: graphical charts
 st.subheader(f'Tear Strength Parameter plots:')
 col1, col2 = st.columns(2)
+sorted_cover_group = selection_df.sort_values(by=["Coverage group"], ascending=False)
+weft_tear = box_plot(selection_df, col1, 'Weft Tear', sorted_cover_group['Coverage group'], 'rocket', 'Weft Tear Range')
 
-weft_tear = box_plot(selection_df, col1, 'Weft Tear', 'Coverage group', 'rocket', 'Weft Tear Range')
-
-warp_tear = box_plot(selection_df, col2, 'Warp Tear', 'Coverage group', 'winter', 'Warp Tear Range')
+warp_tear = box_plot(selection_df, col2, 'Warp Tear', sorted_cover_group['Coverage group'], 'winter', 'Warp Tear Range')
 
 st.subheader(f'Tensile Strength Parameter plots:')
 col1, col2 = st.columns(2)
 
-weft_tensile = box_plot(selection_df, col1, 'Weft Tensile', 'Coverage group',  'rocket', 'Weft Tensile Range')
+weft_tensile = box_plot(selection_df, col1, 'Weft Tensile', sorted_cover_group['Coverage group'],  'rocket', 'Weft Tensile Range')
 
-warp_tensile = box_plot(selection_df, col2, 'Warp Tensile', 'Coverage group',  'winter', 'Warp Tensile Range')
+warp_tensile = box_plot(selection_df, col2, 'Warp Tensile', sorted_cover_group['Coverage group'],  'winter', 'Warp Tensile Range')
 
 st.subheader(f'Stretch Parameter plots:')
 col1, col2 = st.columns(2)
 
-growth = box_plot(selection_df, col1, 'Growth', 'Coverage group', 'rocket', 'Growth Range')
+growth = box_plot(selection_df, col1, 'Growth', sorted_cover_group['Coverage group'], 'rocket', 'Growth Range')
 
-elongation = box_plot(selection_df, col2, 'Elongation', 'Coverage group', 'winter', 'Elogation Range')
+elongation = box_plot(selection_df, col2, 'Elongation', sorted_cover_group['Coverage group'], 'winter', 'Elongation Range')
 
 
 # article dataframe display
 st.subheader(f'Article raw data: {article_selectbox}')
-merged_df_display = st.dataframe(merged_df[[ 'EPI','PPI', 'GSM', 'Total coverage', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'Finish Width2', 'Warp*Weft']])
+df_display = st.dataframe(selection_df[[ 'EPI','PPI', 'GSM', 'Total coverage', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'Finish Width2', 'Warp*Weft']])
