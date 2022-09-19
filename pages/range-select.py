@@ -1,3 +1,4 @@
+# important librabries
 import pandas as pd
 import streamlit as st
 import seaborn as sns
@@ -5,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # basic configurations
 st.set_page_config(
-    page_title="F3P Main:Range Select",
+    page_title="F3P Main : Range Select",
     page_icon="🔍",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -23,13 +24,15 @@ cover_df = pd.read_csv("Coverage data.csv")
 # an apt heading
 st.header("Fabric Physical Parameters Predictor: Range-Select")
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4, col5 = st.columns(5)
 
 # more finer selection
-all_weaves = df['Weave'].unique()
-weave_selectbox = col1.selectbox("Different Weaves:", all_weaves)
 df['warp'], df['weft'] = df['Warp*Weft'].str.split("*",1).str
 all_warp_list = df['warp'].unique()
-warp_selectbox = col2.selectbox("Warp select:", all_warp_list)
+warp_count_select = col1.selectbox("Warp count:", all_warp_list)
+warp_spun_select = col2.selectbox("Warp spun:", all_warp_list)
 all_weft_list = df['weft'].unique()
-weft_selectbox = col3.selectbox("Weft select:", all_weft_list)
+weft_count_select = col3.selectbox("Weft count:", all_weft_list)
+weft_spun_select = col4.selectbox("Weft spun:", all_weft_list)
+all_weaves = df['Weave'].unique()
+weave_selectbox = col5.selectbox("Weave select:", all_weaves)
