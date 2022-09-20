@@ -40,21 +40,24 @@ col1, col2, col3 = st.columns(3)
 
 article = col1.metric('Weave', article_df.Weave.unique()[0])
 count_data = article_df['Warp*Weft'].unique()[0].split("*")
+tpi_data = article_df['EPI*PPI'].unique()[0].split("*")
 warp_count = count_data[0]
 weft_count = count_data[1]
-count_wp = col2.metric('Warp Count/Composition', warp_count)
-count_wf = col3.metric('Weft Count/Composition', weft_count)
+count_both = col2.metric('Warp-Weft count', count_data[0]+'/'+count_data[1])
+tpi = col3.metric('EPI-PPI', tpi_data[0]+'/'+tpi_data[1])
 
 
 # dataframes merger
 selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Finish']==finish)&(df['Style']==style)]
 
 # plotting function
-def box_plot(df_select, col_num, x, y, palette, title):
+def box_plot(df_select, col_num, x, y, palette, title, std):
     fig = plt.figure(figsize=(8, 3))
     value_to_plot = sns.boxplot(data=df_select, x=x, y=y, showcaps=False, width=0.5, linewidth=2, whis=1, palette=palette).set(title=title)
     mean_val = df_select[x].mean()
-    plt.axvline(mean_val, c='m', ls='--', lw=3)
+    std_mean_val = df_select[std].mean()
+    #plt.axvline(mean_val, c='m', ls='--', lw=3)
+    plt.axvline(std_mean_val, c='r', ls='-', lw=3)
     #fig.plot(x = 13, color = 'b', label = '12')
     col_num.pyplot(fig)
 
@@ -62,25 +65,20 @@ def box_plot(df_select, col_num, x, y, palette, title):
 st.subheader(f'Tear Strength Parameter plots:')
 col1, col2 = st.columns(2)
 sorted_cover_group = selection_df.sort_values(by=["Coverage group"], ascending=False)
-weft_tear = box_plot(selection_df, col1, 'Weft Tear', sorted_cover_group['Coverage group'], 'rocket', 'Weft Tear Range')
-
+weft_tear = box_plot(selection_df, col1, 'Weft Tear', sorted_cover_group['Coverage group'], 'rocket', 'Weft Tear Range','STD_Weft_Tear')
 warp_tear = box_plot(selection_df, col2, 'Warp Tear', sorted_cover_group['Coverage group'], 'winter', 'Warp Tear Range')
 
 st.subheader(f'Tensile Strength Parameter plots:')
 col1, col2 = st.columns(2)
-
 weft_tensile = box_plot(selection_df, col1, 'Weft Tensile', sorted_cover_group['Coverage group'],  'rocket', 'Weft Tensile Range')
-
 warp_tensile = box_plot(selection_df, col2, 'Warp Tensile', sorted_cover_group['Coverage group'],  'winter', 'Warp Tensile Range')
 
 st.subheader(f'Stretch Parameter plots:')
 col1, col2 = st.columns(2)
-
 growth = box_plot(selection_df, col1, 'Growth', sorted_cover_group['Coverage group'], 'rocket', 'Growth Range')
-
 elongation = box_plot(selection_df, col2, 'Elongation', sorted_cover_group['Coverage group'], 'winter', 'Elongation Range')
 
 
 # article dataframe display
 st.subheader(f'Article raw data: {article_selectbox}')
-df_display = st.dataframe(selection_df[[ 'EPI','PPI', 'GSM', 'Total coverage', 'Coverage group', 'Warp Shrinkage','Weft Shrinkage', 'Warp Tear','Weft Tear', 'Warp Tensile', 'Weft Tensile','Warp Slippage', 'Weft Slippage', 'Growth', 'Elongation', 'Finish Width2', 'Warp*Weft']])
+df_display = st.dataframe(selection_df)
