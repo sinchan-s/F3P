@@ -39,11 +39,11 @@ style = col3.selectbox("Select Style:", article_df.Style.unique())
 col1, col2, col3 = st.columns(3)
 weave = article_df.Weave.unique()[0]
 gsm = article_df.GSM.unique()[0]
-article = col1.metric('Weave-GSM', weave+' / '+str(gsm))
+article = col1.metric('Weave || GSM', weave+' || '+str(gsm))
 count_data = article_df['Warp*Weft'].unique()[0].split("*")
 tpi_data = article_df['EPI*PPI'].unique()[0].split("*")
-count_both = col2.metric('Warp-Weft count', count_data[0]+' / '+count_data[1])
-tpi = col3.metric('EPI-PPI', tpi_data[0]+' / '+tpi_data[1])
+count_both = col2.metric('Warp || Weft', count_data[0]+' || '+count_data[1])
+tpi = col3.metric('EPI || PPI', tpi_data[0]+' || '+tpi_data[1])
 
 
 # dataframes merger
