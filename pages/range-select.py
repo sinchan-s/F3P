@@ -19,7 +19,7 @@ sns.set_style('darkgrid')
 # reading the source file
 df = pd.read_csv("main_data.csv")
 cover_df = pd.read_csv("Coverage data.csv")
-
+articles_df = pd.read_csv("articles.csv")
 
 # an apt heading
 st.header("Fabric Physical Parameters Predictor: Range-Select")
@@ -36,3 +36,8 @@ weft_count_select = col3.selectbox("Weft count:", all_weft_list)
 weft_spun_select = col4.selectbox("Weft compo:", all_weft_list)
 all_weaves = df['Weave'].unique()
 weave_selectbox = col5.selectbox("Weave select:", all_weaves)
+all_articles = articles_df['K1'].unique()
+article_select = col1.selectbox("Articles", all_articles)
+
+selection_df = articles_df.loc[(articles_df['K1']==article_select)]
+df_display = st.table(selection_df)
