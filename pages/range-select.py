@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 
 # basic configurations
 st.set_page_config(
-    page_title="F3P Main : Range Select",
-    page_icon="🔍",
-    layout="wide",
-    initial_sidebar_state="collapsed",
+    page_title="F3P Main : Range Select",       # similar to <title> tag
+    page_icon="🔍",                             # page icon
+    layout="wide",                              # widen-out view of the layout
+    initial_sidebar_state="collapsed",          # side-bar state when page-load
 )
 
 # seaborn graph styling
@@ -40,4 +40,6 @@ all_articles = articles_df['K1'].unique()
 article_select = col1.selectbox("Articles", all_articles)
 
 selection_df = articles_df.loc[(articles_df['K1']==article_select)]
+count_data = selection_df['Long description'].unique()[0].split("-") 
 df_display = st.table(selection_df)
+st.write(count_data)
