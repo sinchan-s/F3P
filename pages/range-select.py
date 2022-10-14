@@ -40,6 +40,4 @@ all_articles = articles_df['K1'].unique()
 article_select = col1.selectbox("Articles", all_articles)
 
 selection_df = articles_df.loc[(articles_df['K1']==article_select)]
-count_data = selection_df['Long description'].unique()[0].split("-") 
 df_display = st.table(selection_df)
-st.write(count_data)
