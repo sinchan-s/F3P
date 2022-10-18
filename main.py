@@ -28,9 +28,9 @@ st.header("Fabric Physical Parameters Predictor")
 # column-wise split: article selection & finsih-style selection
 col1, col2, col3 = st.columns(3)
 
-all_articles = main_df['Article No.'].unique()
+all_articles = df['Article No.'].unique()
 article_selectbox = col1.selectbox("Select Article:", all_articles)
-article_df = main_df[main_df['Article No.']==article_selectbox]
+article_df = df[df['Article No.']==article_selectbox]
 finish = col2.selectbox("Select Finish Code:", article_df.Finish.unique())
 style = col3.selectbox("Select Style:", article_df.Style.unique())
 
@@ -47,7 +47,7 @@ tpi = col3.metric('EPI || PPI', tpi_data[0]+' || '+tpi_data[1])
 
 
 # dataframes merger
-selection_df = main_df.loc[(main_df['Article No.']==article_selectbox)&(main_df['Finish']==finish)&(main_df['Style']==style)]
+selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Finish']==finish)&(df['Style']==style)]
 
 # plotting function
 def box_plot(df_select, col_num, x, y, palette, title, std):
