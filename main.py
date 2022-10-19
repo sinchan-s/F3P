@@ -15,7 +15,6 @@ st.set_page_config(
 # seaborn graph styling
 sns.set_style('darkgrid')
 
-
 # reading the source file
 df = pd.read_csv("main_data.csv")
 cover_df = pd.read_csv("Coverage data.csv")
@@ -23,7 +22,6 @@ cover_df = pd.read_csv("Coverage data.csv")
 
 # an apt heading
 st.header("Fabric Physical Parameters Predictor")
-
 
 # column-wise split: article selection & finsih-style selection
 col1, col2, col3 = st.columns(3)
@@ -34,7 +32,6 @@ article_df = df[df['Article No.']==article_selectbox]
 finish = col2.selectbox("Select Finish Code:", article_df.Finish.unique())
 style = col3.selectbox("Select Style:", article_df.Style.unique())
 
-
 # column-wise split: weave display & warp-weft count display
 col1, col2, col3 = st.columns(3)
 weave = article_df.Weave.unique()[0]
@@ -44,7 +41,6 @@ count_data = article_df['Warp*Weft'].unique()[0].split("*")         #split into 
 tpi_data = article_df['EPI*PPI'].unique()[0].split("*")
 count_both = col2.metric('Warp || Weft', count_data[0]+' || '+count_data[1])
 tpi = col3.metric('EPI || PPI', tpi_data[0]+' || '+tpi_data[1])
-
 
 # dataframes merger
 selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Finish']==finish)&(df['Style']==style)]
@@ -76,7 +72,6 @@ st.subheader(f'Stretch Parameter plots:')
 col1, col2 = st.columns(2)
 growth = box_plot(selection_df, col1, 'Growth', sorted_cover_group['Coverage group'], 'rocket', 'Growth Range', 'Growth')
 elongation = box_plot(selection_df, col2, 'Elongation', sorted_cover_group['Coverage group'], 'winter', 'Elongation Range', 'Elongation')
-
 
 # article dataframe display
 st.subheader(f'Article raw data: {article_selectbox}')
