@@ -19,7 +19,7 @@ sns.set_style('darkgrid')
 # reading the source file
 df = pd.read_csv("main_data.csv")
 cover_df = pd.read_csv("Coverage data.csv")
-main_df = pd.read_excel("main_params_data.xlsx", sheet_name='Final QA testing Report')
+#main_df = pd.read_excel("main_params_data.xlsx", sheet_name='Final QA testing Report')
 
 # an apt heading
 st.header("Fabric Physical Parameters Predictor")
