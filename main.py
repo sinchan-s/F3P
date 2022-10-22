@@ -19,7 +19,7 @@ sns.set_style('darkgrid')
 #! reading the source file
 df = pd.read_csv("main_data.csv")
 cover_df = pd.read_csv("Coverage data.csv")
-main_df = pd.read_csv("main_params_data.csv")
+
 
 #! an apt heading
 st.header("Fabric Physical Parameters Predictor")
@@ -38,7 +38,7 @@ col1, col2, col3 = st.columns(3)
 weave = article_df.Weave.unique()[0]
 gsm = article_df.GSM.unique()[0]
 article = col1.metric('Weave || GSM', weave+' || '+str(gsm))
-count_data = article_df['Warp*Weft'].unique()[0].split("*")         #split into a list 
+count_data = article_df['Warp*Weft'].unique()[0].split("*")         #!split into a list 
 tpi_data = article_df['EPI*PPI'].unique()[0].split("*")
 count_both = col2.metric('Warp || Weft', count_data[0]+' || '+count_data[1])
 tpi = col3.metric('EPI || PPI', tpi_data[0]+' || '+tpi_data[1])
@@ -54,7 +54,7 @@ def box_plot(df_select, col_num, x, y, palette, title, std):
     std_mean_val = df_select[std].mean()
     plt.axvline(mean_val, c='m', ls='--', lw=3)
     plt.axvline(std_mean_val, c='r', ls='-', lw=1)
-    #fig.plot(x = 13, color = 'b', label = '12')
+    #*fig.plot(x = 13, color = 'b', label = '12')
     col_num.pyplot(fig)
 
 #! column-wise split: graphical charts
