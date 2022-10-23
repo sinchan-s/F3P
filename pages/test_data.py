@@ -28,6 +28,10 @@ col1, col2, col3 = st.columns(3)
 all_articles = df['Article No.'].unique()
 article_selectbox = col1.selectbox("Select Article:", all_articles)
 article_df = df[df['Article No.']==article_selectbox]
+finish = col2.selectbox("Select Finish Code:", article_df.Pattern.unique())
+style = col3.selectbox("Select Style:", article_df['Print Color'].unique())
+selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Pattern']==finish)&(df['Print Color']==style)]
 
-#?finish = col2.selectbox("Select Finish Code:", article_df.Finish.unique())
-#?style = col3.selectbox("Select Style:", article_df.Style.unique())
+#! dataframe display
+st.subheader(f'Table for: {article_selectbox}')
+df_display = st.dataframe(selection_df)
