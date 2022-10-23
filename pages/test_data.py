@@ -33,5 +33,5 @@ style = col3.selectbox("Select Style:", article_df['Print Color'].unique())
 selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Pattern']==finish)&(df['Print Color']==style)]
 
 #! dataframe display
-st.subheader(f'Table for: {article_selectbox}')
-df_display = st.dataframe(selection_df)
+with st.expander(f'Table for: {article_selectbox}'):
+    df_display = st.dataframe(selection_df)

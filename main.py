@@ -56,6 +56,10 @@ def box_plot(df_select, col_num, x, y, palette, title, std):
     #*fig.plot(x = 13, color = 'b', label = '12')
     col_num.pyplot(fig)
 
+#! article dataframe display
+with st.expander(f'Table for: {article_selectbox}'):
+    df_display = st.dataframe(selection_df)
+    
 #! column-wise split: graphical charts
 try:
     st.subheader(f'Tear Strength Parameter plots:')
@@ -76,6 +80,3 @@ try:
 except ValueError:
     df_display = st.write("no data to display")
 
-#! article dataframe display
-st.subheader(f'Article raw data: {article_selectbox}')
-df_display = st.dataframe(selection_df)
