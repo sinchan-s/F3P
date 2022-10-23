@@ -20,11 +20,10 @@ sns.set_style('darkgrid')
 df = pd.read_csv("main_data.csv")
 cover_df = pd.read_csv("Coverage data.csv")
 
-
 #! an apt heading
 st.header("Fabric Physical Parameters Predictor")
 
-#! column-wise split: article selection & finsih-style selection
+#! column-wise split: article selection & finish-style selection
 col1, col2, col3 = st.columns(3)
 
 all_articles = df['Article No.'].unique()
@@ -58,21 +57,24 @@ def box_plot(df_select, col_num, x, y, palette, title, std):
     col_num.pyplot(fig)
 
 #! column-wise split: graphical charts
-st.subheader(f'Tear Strength Parameter plots:')
-col1, col2 = st.columns(2)
-sorted_cover_group = selection_df.sort_values(by=["Coverage group"], ascending=False)
-weft_tear = box_plot(selection_df, col2, 'Weft Tear', sorted_cover_group['Coverage group'], 'rocket', 'Weft Tear Range','STD_Weft_Tear')
-warp_tear = box_plot(selection_df, col1, 'Warp Tear', sorted_cover_group['Coverage group'], 'winter', 'Warp Tear Range','STD_Warp_Tear')
+try:
+    st.subheader(f'Tear Strength Parameter plots:')
+    col1, col2 = st.columns(2)
+    sorted_cover_group = selection_df.sort_values(by=["Coverage group"], ascending=False)
+    weft_tear = box_plot(selection_df, col2, 'Weft Tear', sorted_cover_group['Coverage group'], 'rocket', 'Weft Tear Range','STD_Weft_Tear')
+    warp_tear = box_plot(selection_df, col1, 'Warp Tear', sorted_cover_group['Coverage group'], 'winter', 'Warp Tear Range','STD_Warp_Tear')
 
-st.subheader(f'Tensile Strength Parameter plots:')
-col1, col2 = st.columns(2)
-weft_tensile = box_plot(selection_df, col2, 'Weft Tensile', sorted_cover_group['Coverage group'],  'rocket', 'Weft Tensile Range','STD_Weft_Tensile')
-warp_tensile = box_plot(selection_df, col1, 'Warp Tensile', sorted_cover_group['Coverage group'],  'winter', 'Warp Tensile Range','STD_Warp_Tensile')
+    st.subheader(f'Tensile Strength Parameter plots:')
+    col1, col2 = st.columns(2)
+    weft_tensile = box_plot(selection_df, col2, 'Weft Tensile', sorted_cover_group['Coverage group'],  'rocket', 'Weft Tensile Range','STD_Weft_Tensile')
+    warp_tensile = box_plot(selection_df, col1, 'Warp Tensile', sorted_cover_group['Coverage group'],  'winter', 'Warp Tensile Range','STD_Warp_Tensile')
 
-st.subheader(f'Stretch Parameter plots:')
-col1, col2 = st.columns(2)
-growth = box_plot(selection_df, col1, 'Growth', sorted_cover_group['Coverage group'], 'rocket', 'Growth Range', 'Growth')
-elongation = box_plot(selection_df, col2, 'Elongation', sorted_cover_group['Coverage group'], 'winter', 'Elongation Range', 'Elongation')
+    st.subheader(f'Stretch Parameter plots:')
+    col1, col2 = st.columns(2)
+    growth = box_plot(selection_df, col1, 'Growth', sorted_cover_group['Coverage group'], 'rocket', 'Growth Range', 'Growth')
+    elongation = box_plot(selection_df, col2, 'Elongation', sorted_cover_group['Coverage group'], 'winter', 'Elongation Range', 'Elongation')
+except ValueError:
+    df_display = st.write("no data to display")
 
 #! article dataframe display
 st.subheader(f'Article raw data: {article_selectbox}')
