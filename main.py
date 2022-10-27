@@ -57,7 +57,7 @@ def box_plot(df_select, col_num, x, y, palette, title, std):
     col_num.pyplot(fig)
 
 #! article dataframe display
-with st.expander(f'Table for: {article_selectbox}'):
+with st.expander(f'Raw Data Table: {article_selectbox}'):
     df_display = st.dataframe(selection_df)
     
 #! column-wise split: graphical charts
@@ -78,5 +78,5 @@ try:
     growth = box_plot(selection_df, col1, 'Growth', sorted_cover_group['Coverage group'], 'rocket', 'Growth Range', 'Growth')
     elongation = box_plot(selection_df, col2, 'Elongation', sorted_cover_group['Coverage group'], 'winter', 'Elongation Range', 'Elongation')
 except ValueError:
-    df_display = st.write("no data to display")
-
+    st.subheader('< no data to display 😵 >')
+    #df_display = st.write("")
