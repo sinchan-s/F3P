@@ -30,7 +30,7 @@ all_articles = df['Article No.'].unique()
 article_selectbox = col1.selectbox("Select Article:", all_articles)
 article_df = df[df['Article No.']==article_selectbox]
 finish = col2.selectbox("Select Finish Code:", article_df.Finish.unique())
-style = col3.selectbox("Select Style:", article_df.Style.unique())
+style = col3.radio("Select Style:", article_df.Style.unique())
 
 #! column-wise split: weave display & warp-weft count display
 col1, col2, col3 = st.columns(3)
