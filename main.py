@@ -57,7 +57,7 @@ def box_plot(df_select, col_num, x, y, palette, title, std):
     col_num.pyplot(fig)
 
 #! article dataframe display
-with st.expander(f'Article Data Table: {article_selectbox}'):
+with st.expander(f'Article Table: {article_selectbox}'):
     df_display = st.dataframe(selection_df)
     
 #! column-wise split: graphical charts
