@@ -25,12 +25,12 @@ st.header("experimentation domain")
 col1, col2, col3 = st.columns(3)
 
 all_articles = df['Article No.'].unique()
-article_selectbox = col1.selectbox("Select Article:", all_articles)
+article_selectbox = col1.multiselect("Select Article:", all_articles, default='14015')
+st.write(f'debug : {article_selectbox}')
 article_df = df[df['Article No.']==article_selectbox]
 finish = col2.selectbox("Select Finish Code:", article_df.Pattern.unique())
 style = col3.selectbox("Select Style:", article_df['Print Color'].unique())
 selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Pattern']==finish)&(df['Print Color']==style)]
 
 #! dataframe display
-with st.expander(f'Table for: {article_selectbox}'):
-    df_display = st.dataframe(selection_df)
+df_display = st.dataframe(selection_df)
