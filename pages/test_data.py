@@ -33,7 +33,7 @@ article_df = df[df['Article No.']==article_selectbox]
 style = col2.radio("Select Style:", article_df['style'].unique())
 finish = col3.multiselect("Select Finish Code:", article_df.Pattern.unique(), default=article_df.Pattern.unique()[0])
 st.write(f"debug : {finish}")
-selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Pattern'].isin([finish]))&(df['style']==style)]
+selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Pattern'].isin(finish))&(df['style']==style)]
 
 #! dataframe display
 df_display = st.dataframe(selection_df)
