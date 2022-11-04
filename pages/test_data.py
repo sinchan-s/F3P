@@ -29,7 +29,7 @@ col1, col2, col3 = st.columns(3)
 
 try:
     all_articles = df['Article No.'].unique()
-    article_selectbox = col1.multiselect("Select Article:", all_articles, default='14015')
+    article_selectbox = col1.multiselect("Select Article:", all_articles, default='A1600187')
     article_df = df[df['Article No.'].isin(article_selectbox)]
     finish = col2.multiselect("Select Finish Code:", article_df.Pattern.unique(), default=article_df.Pattern.unique()[0])
     style = col3.radio("Select Style:", article_df['style'].unique())
