@@ -43,3 +43,6 @@ try:
     df_display = st.dataframe(selection_df)
 except:
     st.subheader("No table to show 😔")
+
+with st.expander(f'All Data'):
+    df_display = st.dataframe(df)
