@@ -29,9 +29,9 @@ col1, col2, col3 = st.columns(3)
 
 try:
     all_articles = df['Article No.'].unique()
-    article_selectbox = col1.multiselect("Select Article:", all_articles, default='A1600187')
+    article_selectbox = col1.multiselect("Select Article:", all_articles, default='A1600187', help="You can select multiple articles")
     article_df = df[df['Article No.'].isin(article_selectbox)]
-    finish = col2.multiselect("Select Finish Code:", article_df.Pattern.unique(), default=article_df.Pattern.unique()[0])
+    finish = col2.multiselect("Select Finish Code:", article_df.Pattern.unique(), default=article_df.Pattern.unique()[0], help="You can select multiple finish codes")
     style = col3.radio("Select Style:", article_df['style'].unique())
     st.write(f"debug : {finish}")
     selection_df = df.loc[(df['Article No.'].isin(article_selectbox))&(df['Pattern'].isin(finish))&(df['style']==style)]
