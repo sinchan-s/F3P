@@ -42,7 +42,7 @@ except:
 try:
     df_display = st.dataframe(selection_df)
 except:
-    st.subheader("No table to show 😔")
+    st.subheader("No selected data table to show but still you can see raw data 👇")
 
 with st.expander(f'All Data'):
     df_display = st.dataframe(df)
