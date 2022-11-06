@@ -33,16 +33,16 @@ try:
     article_df = df[df['Article No.'].isin(article_selectbox)]
     finish = col2.multiselect("Select Finish Code:", article_df.Pattern.unique(), default=article_df.Pattern.unique()[0], help="You can select multiple finish codes")
     style = col3.radio("Select Style:", article_df['style'].unique())
-    st.write(f"debug : {finish}")
+    #st.write(f"debug : {finish}")
     selection_df = df.loc[(df['Article No.'].isin(article_selectbox))&(df['Pattern'].isin(finish))&(df['style']==style)]
 except:
     st.subheader("Please select data to display 👆")
 
 #! dataframe display
+tab1, tab2 = st.tabs(["Selected Data", "All Data"])
 try:
-    df_display = st.dataframe(selection_df)
+    df_display = tab1.dataframe(selection_df)
 except:
-    st.subheader("No selected data table to show but still you can see raw data 👇")
-
-with st.expander(f'All Data'):
-    df_display = st.dataframe(df)
+    st.write("No data to show but still you see All Data")
+finally:
+    df_display = tab2.dataframe(df)
