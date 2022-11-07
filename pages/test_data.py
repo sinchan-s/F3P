@@ -38,6 +38,7 @@ try:
 except:
     st.error("Please select data to display 👆")
 
+
 #! dataframe display
 tab1, tab2 = st.tabs(["Selected Data", "All Data"])
 try:
@@ -46,3 +47,6 @@ except:
     st.warning("No data to show but still you see All Data")
 finally:
     df_display = tab2.dataframe(df)
+
+st.file_uploader("Upload latest file", type=['csv','xlsx'], accept_multiple_files=False, help="Only upload Article-Wise param data file")
+
