@@ -29,8 +29,9 @@ col1, col2, col3 = st.columns(3)
 all_articles = df['Article No.'].unique()
 article_selectbox = col1.selectbox("Select Article:", all_articles)
 article_df = df[df['Article No.']==article_selectbox]
-finish = col2.selectbox("Select Finish Code:", article_df.Finish.unique())
+finish = col2.multiselect("Select Finish Code:", article_df.Finish.unique(), default=article_df.Finish.unique()[0], help="Select one or more finish codes to see the data table")
 style = col3.radio("Select Style:", article_df.Style.unique())
+
 
 #! column-wise split: weave display & warp-weft count display
 col1, col2, col3 = st.columns(3)
@@ -43,7 +44,7 @@ count_both = col2.metric('Warp || Weft', count_data[0]+' || '+count_data[1])
 tpi = col3.metric('EPI || PPI', tpi_data[0]+' || '+tpi_data[1])
 
 #! dataframes merger
-selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Finish']==finish)&(df['Style']==style)]
+selection_df = df.loc[(df['Article No.']==article_selectbox)&(df['Finish'].isin(finish))&(df['Style']==style)]
 
 #! plotting function
 def box_plot(df_select, col_num, x, y, palette, title, std):
@@ -56,27 +57,30 @@ def box_plot(df_select, col_num, x, y, palette, title, std):
     #*fig.plot(x = 13, color = 'b', label = '12')
     col_num.pyplot(fig)
 
-#! article dataframe display
-with st.expander(f'Article Table: {article_selectbox}'):
-    df_display = st.dataframe(selection_df)
+#! tabular construct
+tab1, tab2 = st.tabs(["Parameter Plots", "Article Tabular Data"])
     
 #! column-wise split: graphical charts
 try:
-    st.subheader(f'Tear Strength Parameter plots:')
-    col1, col2 = st.columns(2)
+    tab1.subheader(f'Tear Strength')
+    col1, col2 = tab1.columns(2)
     sorted_cover_group = selection_df.sort_values(by=["Coverage group"], ascending=False)
     weft_tear = box_plot(selection_df, col2, 'Weft Tear', sorted_cover_group['Coverage group'], 'rocket', 'Weft Tear Range','STD_Weft_Tear')
     warp_tear = box_plot(selection_df, col1, 'Warp Tear', sorted_cover_group['Coverage group'], 'winter', 'Warp Tear Range','STD_Warp_Tear')
 
-    st.subheader(f'Tensile Strength Parameter plots:')
-    col1, col2 = st.columns(2)
+    tab1.subheader(f'Tensile Strength')
+    col1, col2 = tab1.columns(2)
     weft_tensile = box_plot(selection_df, col2, 'Weft Tensile', sorted_cover_group['Coverage group'],  'rocket', 'Weft Tensile Range','STD_Weft_Tensile')
     warp_tensile = box_plot(selection_df, col1, 'Warp Tensile', sorted_cover_group['Coverage group'],  'winter', 'Warp Tensile Range','STD_Warp_Tensile')
 
-    st.subheader(f'Stretch Parameter plots:')
-    col1, col2 = st.columns(2)
+    tab1.subheader(f'Stretch Parameters')
+    col1, col2 = tab1.columns(2)
     growth = box_plot(selection_df, col1, 'Growth', sorted_cover_group['Coverage group'], 'rocket', 'Growth Range', 'Growth')
     elongation = box_plot(selection_df, col2, 'Elongation', sorted_cover_group['Coverage group'], 'winter', 'Elongation Range', 'Elongation')
 except ValueError:
-    st.subheader('< no data to display 😵 >')
+    tab1.subheader('< no data to display 😵 >')
     #df_display = st.write("")
+
+#! article dataframe display
+tab2.write(f'Article Selected: {article_selectbox}')
+df_display = tab2.dataframe(selection_df)
