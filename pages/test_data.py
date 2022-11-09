@@ -45,9 +45,16 @@ tab1, tab2 = st.tabs(["Selected Data", "All Data"])
 try:
     df_display = tab1.dataframe(selection_df)
 except:
-    st.warning("No data to show but still you see All Data")
+    st.warning("No data to show but still you can see All Data")
 finally:
     df_display = tab2.dataframe(main_df)
 
-st.file_uploader("Upload latest data", type=['csv','xlsx'], accept_multiple_files=False, help="Only upload Article-Wise param data file")
+file_upload = st.file_uploader("Upload latest data in csv format only", type=['csv'], accept_multiple_files=False, help="Only upload Article-Wise param data file")
 
+try:
+    if file_upload is not None:
+        prev_df = pd.read_csv(file_upload)
+        st.write("File Preview:")
+        st.dataframe(prev_df)
+except:
+    st.write("Unable to preview file !!")
