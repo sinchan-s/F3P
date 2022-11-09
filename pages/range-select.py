@@ -37,15 +37,15 @@ wa_match = r"\d+"
 all_warp_list = selection_df['warp'].unique()
 wa_count_search = re.search(wa_match, all_warp_list[0])
 warp_count_select = col1.selectbox("Warp count:", all_warp_list)
-warp_spun_select = col2.selectbox("Warp compo:", all_warp_list)
+warp_spun_select = col2.selectbox("Warp composition:", all_warp_list)
 all_weft_list = selection_df['weft'].unique()
 weft_count_select = col3.selectbox("Weft count:", all_weft_list)
-weft_spun_select = col4.selectbox("Weft compo:", all_weft_list)
+weft_spun_select = col4.selectbox("Weft composition:", all_weft_list)
 all_weaves = selection_df['Weave'].unique()
 weave_selectbox = col5.selectbox("Weave select:", all_weaves)
 
 #! metrics display
-wa_count_display = st.metric('Warp Count',wa_count_search[0])
-wa_disp = st.write(wa_count_search)
+#wa_count_display = st.metric('Warp Count',wa_count_search[0])
+#wa_disp = st.write(wa_count_search)
 #! dataframe display
 df_display = st.table(selection_df)
