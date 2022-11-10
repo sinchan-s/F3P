@@ -30,10 +30,10 @@ col1, col2, col3 = st.columns(3)
 
 try:
     all_articles = main_df['Article No.'].unique()
-    article_selectbox = col1.multiselect("Select Article:", sorted(all_articles), default=all_articles[0], help="Select one or more articles to see the data table")
+    article_selectbox = col1.multiselect("Select Article:", sorted(all_articles), default=all_articles[0], help="Choose one or more articles to see the data table")
     article_df = main_df[main_df['Article No.'].isin(article_selectbox)]
-    finish = col2.multiselect("Select Finish Code:", article_df.Pattern.unique(), default=article_df.Pattern.unique()[0], help="Select one or more finish codes to see the data table")
-    style = col3.radio("Select Style:", article_df['style'].unique())
+    finish = col2.multiselect("Select Finish Code:", article_df.Pattern.unique(), default=article_df.Pattern.unique()[0], help="Choose one or more finish codes to see the data table")
+    style = col3.radio("Select Style:", article_df['style'].unique(), help="Choose any print style")
     #st.write(f"debug : {finish}")
     selection_df = main_df.loc[(main_df['Article No.'].isin(article_selectbox))&(main_df['Pattern'].isin(finish))&(main_df['style']==style)]
 except:
