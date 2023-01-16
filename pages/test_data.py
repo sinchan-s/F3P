@@ -1,8 +1,10 @@
 
 #! important librabries
+import re
 import pandas as pd
 import streamlit as st
 import seaborn as sns
+from io import StringIO
 import matplotlib.pyplot as plt
 
 #! basic configurations
@@ -56,5 +58,36 @@ try:
         prev_df = pd.read_csv(file_upload)
         st.write("File Preview:")
         st.dataframe(prev_df)
+except:
+    st.write("Unable to preview file !!")
+
+
+# QTX file uploader
+qtx_file = st.file_uploader("Upload QTX format file only:", type=['qtx', 'QTX'], accept_multiple_files=False,
+                            help="Only upload QTX file")
+
+# QTX file opener
+try:
+    stringio = StringIO(qtx_file.getvalue().decode("utf-8"))
+    string_data = stringio.read()
+    st.write('str_read: ', string_data)
+    z = re.findall("STD_REFLLOW=(\d+),", string_data)
+    a = re.findall("STD_REFLPOINTS=(\d+),", string_data)
+    b = re.findall("STD_REFLINTERVAL=(\d+),", string_data)
+    c = re.findall("STD_R[=,](.+)", string_data)
+    #st.write(z, a, b, c)
+    for i,j in enumerate(z):
+        ref_low = int(z[i])
+        ref_pts = int(a[i])
+        ref_intv = int(b[i])
+        ref_val_list = str(c[i]).split(',')
+        wave_list = [k for k in range(ref_low, ref_low + ref_pts * ref_intv, ref_intv)]
+        # print('Wavelength values: ', wave_list)
+        # print('Reflectance values: ', ref_val_list)
+        sd_df = pd.DataFrame(ref_val_list, index=wave_list, columns=['ref_val'])
+        sd_df['ref_val'] = sd_df['ref_val'].astype('float64')
+        st.dataframe(sd_df)
+        st.line_chart(sd_df)
+
 except:
     st.write("Unable to preview file !!")
