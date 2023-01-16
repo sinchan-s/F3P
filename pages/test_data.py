@@ -82,11 +82,9 @@ try:
         ref_intv = int(b[i])
         ref_val_list = str(c[i]).split(',')
         wave_list = [k for k in range(ref_low, ref_low + ref_pts * ref_intv, ref_intv)]
-        # print('Wavelength values: ', wave_list)
-        # print('Reflectance values: ', ref_val_list)
         sd_df = pd.DataFrame(ref_val_list, index=wave_list, columns=['ref_val'])
         sd_df['ref_val'] = sd_df['ref_val'].astype('float64')
-        st.dataframe(sd_df)
+        #st.dataframe(sd_df)
         st.line_chart(sd_df)
 
 except:
