@@ -51,19 +51,9 @@ except:
 finally:
     df_display = tab2.dataframe(main_df)
 
-file_upload = st.file_uploader("Upload latest data in csv format only", type=['csv'], accept_multiple_files=False, help="Only upload Article-Wise param data file")
-
-try:
-    if file_upload is not None:
-        prev_df = pd.read_csv(file_upload)
-        st.write("File Preview:")
-        st.dataframe(prev_df)
-except:
-    st.write("Unable to preview file !!")
-
 
 # QTX file uploader
-qtx_file = st.file_uploader("Upload QTX format file only:", type=['qtx', 'QTX'], accept_multiple_files=False,
+qtx_file = st.file_uploader("Upload QTX format file only:", type=['qtx'], accept_multiple_files=False,
                             help="Only upload QTX file")
 
 # QTX file opener
@@ -76,16 +66,14 @@ try:
     b = re.findall("STD_REFLINTERVAL=(\d+),", string_data)
     c = re.findall("STD_R[=,](.+)", string_data)
     #st.write(z, a, b, c)
-    for i,j in enumerate(z):
-        ref_low = int(z[i])
-        ref_pts = int(a[i])
-        ref_intv = int(b[i])
+    #sd_df = pd.DataFrame()
+    for i, j in enumerate(z):
+        ref_low, ref_pts, ref_intv = int(z[i]), int(a[i]), int(b[i])
         ref_val_list = str(c[i]).split(',')
         wave_list = [k for k in range(ref_low, ref_low + ref_pts * ref_intv, ref_intv)]
-        sd_df = pd.DataFrame(ref_val_list, index=wave_list, columns=['ref_val'])
-        sd_df['ref_val'] = sd_df['ref_val'].astype('float64')
-        #st.dataframe(sd_df)
+        sd_df = pd.DataFrame(ref_val_list, index=wave_list, columns=['Spectral_waveform'])
+        sd_df['Spectral_waveform'] = sd_df['Spectral_waveform'].astype('float64')
         st.line_chart(sd_df)
-
+        st.dataframe(sd_df)
 except:
     st.write("Unable to preview file !!")
