@@ -43,13 +43,14 @@ except:
 
 
 #! dataframe display
-tab1, tab2 = st.tabs(["Selected Data", "All Data"])
-try:
-    df_display = tab1.dataframe(selection_df)
-except:
-    st.warning("No data to show but still you can see All Data")
-finally:
-    df_display = tab2.dataframe(main_df)
+with st.expander("Data Tables", expanded=False):
+    tab1, tab2 = st.tabs(["Selected Data", "All Data"])
+    try:
+        df_display = tab1.dataframe(selection_df)
+    except:
+        st.warning("No data to show but still you can see All Data")
+    finally:
+        df_display = tab2.dataframe(main_df)
 
 
 # QTX file uploader
