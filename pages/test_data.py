@@ -62,25 +62,26 @@ qtx_file = st.file_uploader("Upload QTX format file only:", type=['qtx'], accept
 
 # QTX file opener
 try:
+    # converting qtx data to raw string
     stringio = StringIO(qtx_file.getvalue().decode("utf-8"))
     string_data = stringio.read()
     with st.expander('Raw data: ', expanded=False):
         st.write(string_data)
+    # values extraction using regex
     std_name = re.findall("STD_NAME=(.+)", string_data)
-    name_select = st.selectbox("Select Color", std_name)
-    std_i = std_name.index(name_select)
     list_ref_low = re.findall("STD_REFLLOW=(\d+),", string_data)
     list_ref_pts = re.findall("STD_REFLPOINTS=(\d+),", string_data)
     list_ref_int = re.findall("STD_REFLINTERVAL=(\d+),", string_data)
     list_ref_vals = re.findall("STD_R[=,](.+)", string_data)
-    col1, col2 = st.columns(2)
+    # color std selection & graph display
+    name_select = st.selectbox("Select Color", std_name)
+    std_i = std_name.index(name_select)
     ref_low, ref_pts, ref_int = int(list_ref_low[std_i]), int(list_ref_pts[std_i]), int(list_ref_int[std_i])
     ref_max = ref_low + ref_pts * ref_int
     y_ref_val_list = str(list_ref_vals[std_i]).split(',')
     x_wave_list = [k for k in range(ref_low, ref_max, ref_int)]
     sd_df = pd.DataFrame(y_ref_val_list, index=x_wave_list, columns=[name_select])
     sd_df[name_select] = sd_df[name_select].astype('float64')
-    #col1.write(f'{ref_low=}, {ref_pts=}, {ref_int=}, {ref_max=}')
     st.line_chart(sd_df)
 except:
     st.write("Upload a file !")
