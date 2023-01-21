@@ -1,6 +1,7 @@
 # ! important librabries
 import re
 import pandas as pd
+import numpy as np
 import streamlit as st
 import seaborn as sns
 from io import StringIO
@@ -27,6 +28,165 @@ main_df['style'] = [
 
 # ! an apt heading
 st.header("experimentation tab")
+
+
+def wavelength_to_rgb(wavelength, gamma=0.8):
+    ''' taken from http://www.noah.org/wiki/Wavelength_to_RGB_in_Python
+    This converts a given wavelength of light to an
+    approximate RGB color value. The wavelength must be given
+    in nanometers in the range from 380 nm through 750 nm
+    (789 THz through 400 THz).
+
+    Based on code by Dan Bruton
+    http://www.physics.sfasu.edu/astro/color/spectra.html
+    Additionally alpha value set to 0.5 outside range
+    '''
+    wavelength = float(wavelength)
+    if wavelength >= 380 and wavelength <= 750:
+        A = 1.
+    else:
+        A=0.5
+    if wavelength < 380:
+        wavelength = 380.
+    if wavelength >750:
+        wavelength = 750.
+    if wavelength >= 380 and wavelength <= 440:
+        attenuation = 0.3 + 0.7 * (wavelength - 380) / (440 - 380)
+        R = ((-(wavelength - 440) / (440 - 380)) * attenuation) ** gamma
+        G = 0.0
+        B = (1.0 * attenuation) ** gamma
+    elif wavelength >= 440 and wavelength <= 490:
+        R = 0.0
+        G = ((wavelength - 440) / (490 - 440)) ** gamma
+        B = 1.0
+    elif wavelength >= 490 and wavelength <= 510:
+        R = 0.0
+        G = 1.0
+        B = (-(wavelength - 510) / (510 - 490)) ** gamma
+    elif wavelength >= 510 and wavelength <= 580:
+        R = ((wavelength - 510) / (580 - 510)) ** gamma
+        G = 1.0
+        B = 0.0
+    elif wavelength >= 580 and wavelength <= 645:
+        R = 1.0
+        G = (-(wavelength - 645) / (645 - 580)) ** gamma
+        B = 0.0
+    elif wavelength >= 645 and wavelength <= 750:
+        attenuation = 0.3 + 0.7 * (750 - wavelength) / (750 - 645)
+        R = (1.0 * attenuation) ** gamma
+        G = 0.0
+        B = 0.0
+    else:
+        R = 0.0
+        G = 0.0
+        B = 0.0
+    return (R,G,B,A)
+
+def xyz_from_xy(x, y):
+    """Return the vector (x, y, 1-x-y)."""
+    return np.array((x, y, 1-x-y))
+
+'''
+class ColourSystem:
+    """A class representing a colour system.
+
+    A colour system defined by the CIE x, y and z=1-x-y coordinates of
+    its three primary illuminants and its "white point".
+
+    TODO: Implement gamma correction
+
+    """
+
+    # The CIE colour matching function for 380 - 780 nm in 5 nm intervals
+    cmf = np.loadtxt('cie-cmf.txt', usecols=(1,2,3))
+
+    def __init__(self, red, green, blue, white):
+        """Initialise the ColourSystem object.
+
+        Pass vectors (ie NumPy arrays of shape (3,)) for each of the
+        red, green, blue  chromaticities and the white illuminant
+        defining the colour system.
+
+        """
+
+        # Chromaticities
+        self.red, self.green, self.blue = red, green, blue
+        self.white = white
+        # The chromaticity matrix (rgb -> xyz) and its inverse
+        self.M = np.vstack((self.red, self.green, self.blue)).T
+        self.MI = np.linalg.inv(self.M)
+        # White scaling array
+        self.wscale = self.MI.dot(self.white)
+        # xyz -> rgb transformation matrix
+        self.T = self.MI / self.wscale[:, np.newaxis]
+
+    def xyz_to_rgb(self, xyz, out_fmt=None):
+        """Transform from xyz to rgb representation of colour.
+
+        The output rgb components are normalized on their maximum
+        value. If xyz is out the rgb gamut, it is desaturated until it
+        comes into gamut.
+
+        By default, fractional rgb components are returned; if
+        out_fmt='html', the HTML hex string '#rrggbb' is returned.
+
+        """
+
+        rgb = self.T.dot(xyz)
+        if np.any(rgb < 0):
+            # We're not in the RGB gamut: approximate by desaturating
+            w = - np.min(rgb)
+            rgb += w
+        if not np.all(rgb==0):
+            # Normalize the rgb vector
+            rgb /= np.max(rgb)
+
+        if out_fmt == 'html':
+            return self.rgb_to_hex(rgb)
+        return rgb
+
+    def rgb_to_hex(self, rgb):
+        """Convert from fractional rgb values to HTML-style hex string."""
+
+        hex_rgb = (255 * rgb).astype(int)
+        return '#{:02x}{:02x}{:02x}'.format(*hex_rgb)
+
+    def spec_to_xyz(self, spec):
+        """Convert a spectrum to an xyz point.
+
+        The spectrum must be on the same grid of points as the colour-matching
+        function, self.cmf: 380-780 nm in 5 nm steps.
+
+        """
+
+        XYZ = np.sum(spec[:, np.newaxis] * self.cmf, axis=0)
+        den = np.sum(XYZ)
+        if den == 0.:
+            return XYZ
+        return XYZ / den
+
+    def spec_to_rgb(self, spec, out_fmt=None):
+        """Convert a spectrum to an rgb value."""
+
+        xyz = self.spec_to_xyz(spec)
+        return self.xyz_to_rgb(xyz, out_fmt)
+
+illuminant_D65 = xyz_from_xy(0.3127, 0.3291)
+cs_hdtv = ColourSystem(red=xyz_from_xy(0.67, 0.33),
+                       green=xyz_from_xy(0.21, 0.71),
+                       blue=xyz_from_xy(0.15, 0.06),
+                       white=illuminant_D65)
+
+cs_smpte = ColourSystem(red=xyz_from_xy(0.63, 0.34),
+                        green=xyz_from_xy(0.31, 0.595),
+                        blue=xyz_from_xy(0.155, 0.070),
+                        white=illuminant_D65)
+
+cs_srgb = ColourSystem(red=xyz_from_xy(0.64, 0.33),
+                       green=xyz_from_xy(0.30, 0.60),
+                       blue=xyz_from_xy(0.15, 0.06),
+                       white=illuminant_D65)'''
+
 
 # ! column-wise split: article selection & finsih-style selection
 col1, col2, col3 = st.columns(3)
@@ -83,5 +243,6 @@ try:
     sd_df = pd.DataFrame(y_ref_val_list, index=x_wave_list, columns=[name_select])
     sd_df[name_select] = sd_df[name_select].astype('float64')
     st.line_chart(sd_df)
+    color = st.color_picker('Standard Color', '#00f900')
 except:
     st.write("Upload a file !")
