@@ -13,6 +13,14 @@ st.set_page_config(
     layout="wide",                              #! widen-out view of the layout
     initial_sidebar_state="collapsed")          #! side-bar state when page-load
 
+#! Clean Footer
+hide_default_format = """
+       <style>
+       #MainMenu {visibility: hidden;}
+       footer {visibility: hidden;}
+       </style>
+       """
+st.markdown(hide_default_format, unsafe_allow_html=True)
 
 #! seaborn graph styling
 sns.set_style('darkgrid')
