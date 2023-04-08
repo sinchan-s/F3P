@@ -31,26 +31,32 @@ cover_df = pd.read_csv("Coverage data.csv")
 articles_df = pd.read_csv("articles.csv")
 
 #! an apt heading
-st.header("Fabric Physical Parameters Predictor: Range-Select")
+st.header("Quality Predictor")
 
 #! single column for single article select
 all_articles = articles_df['K1'].unique()
 article_select = st.selectbox("Articles", all_articles)
+
 selection_df = articles_df.loc[(articles_df['K1']==article_select)]
 selection_df['warp'], selection_df['weft'] = selection_df['Warp*Weft'].str.split("*",1).str
 
 #! more finer selection
-col1, col2, col3, col4, col5 = st.columns(5)
 wa_match = r"\d+"
 all_warp_list = selection_df['warp'].unique()
-wa_count_search = re.search(wa_match, all_warp_list[0])
-warp_count_select = col1.selectbox("Warp count:", all_warp_list)
-warp_spun_select = col2.selectbox("Warp composition:", all_warp_list)
 all_weft_list = selection_df['weft'].unique()
-weft_count_select = col3.selectbox("Weft count:", all_weft_list)
-weft_spun_select = col4.selectbox("Weft composition:", all_weft_list)
 all_weaves = selection_df['Weave'].unique()
-weave_selectbox = col5.selectbox("Weave select:", all_weaves)
+wa_count_search = re.search(wa_match, all_warp_list[0])
+col1, col2, col3, col4, col5 = st.columns(5)
+with col1:
+    warp_count_select = st.selectbox("Warp count:", all_warp_list)
+with col2:
+    warp_spun_select = st.selectbox("Warp composition:", all_warp_list)
+with col3:
+    weft_count_select = st.selectbox("Weft count:", all_weft_list)
+with col4:
+    weft_spun_select = st.selectbox("Weft composition:", all_weft_list)
+with col5:
+    weave_selectbox = st.selectbox("Weave select:", all_weaves)
 
 #! metrics display
 #wa_count_display = st.metric('Warp Count',wa_count_search[0])
