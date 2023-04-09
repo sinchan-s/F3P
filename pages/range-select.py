@@ -36,7 +36,8 @@ st.header("Quality Predictor")
 #! single column for single article select
 all_articles = articles_df['K1'].unique()
 article_select = st.selectbox("Articles", all_articles)
-
+test_df = articles_df[articles_df['Construction'].str.contains('VOR')]
+st.dataframe(test_df)
 selection_df = articles_df.loc[(articles_df['K1']==article_select)]
 selection_df['warp'], selection_df['weft'] = selection_df['Warp*Weft'].str.split("*",1).str
 
@@ -49,6 +50,7 @@ wa_count_search = re.search(wa_match, all_warp_list[0])
 col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     warp_count_select = st.selectbox("Warp count:", all_warp_list)
+    warp_count_select2 = st.selectbox("Warp count2:", all_warp_list)
 with col2:
     warp_spun_select = st.selectbox("Warp composition:", all_warp_list)
 with col3:
@@ -62,4 +64,8 @@ with col5:
 #wa_count_display = st.metric('Warp Count',wa_count_search[0])
 #wa_disp = st.write(wa_count_search)
 #! dataframe display
-df_display = st.table(selection_df)
+tab1, tab2 = st.tabs(['Selected Data', 'All Data'])
+with tab1:
+    df_display = st.table(selection_df)
+with tab2:
+    df_display = st.dataframe(articles_df)
