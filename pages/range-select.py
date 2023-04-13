@@ -38,13 +38,13 @@ all_articles = articles_df['K1'].unique()
 # article_select = st.selectbox("Articles", all_articles)
 articles_df['EPI-PPI'] = articles_df['Construction'].str.extract(r'[-*/]{1}([\d]{2,3}[*][\d]{2,3})[-*\s\b]{1}')
 spin_dict = {'Carded':'K',
-                 'Carded Compact': 'K.COM', 
-                 'Combed': 'C', 
-                 'Combed Compact': 'C.COM', 
-                 'Vortex':'VOR', 
-                 'Open-End':'OE'}
+            'Carded Compact': 'K.COM', 
+            'Combed': 'C', 
+            'Combed Compact': 'C.COM', 
+            'Vortex':'VOR', 
+            'Open-End':'OE'}
 spin_select = st.selectbox("Select Spinning Tech", list(spin_dict),  help="--to be updated--")
-selection_df = articles_df[articles_df['Construction'].str.contains(spin_dict.get(spin_select)) & articles_df['Construction'].str.contains('SPX')]
+selection_df = articles_df[articles_df['Construction'].str.contains(spin_dict.get(spin_select)) & articles_df['Construction'].str.contains('*')]
 # st.dataframe(test_df)
 # selection_df = articles_df.loc[(articles_df['K1']==article_select)]
 selection_df['Warp'], selection_df['Weft'] = selection_df['Warp*Weft'].str.split("*",1).str
