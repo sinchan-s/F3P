@@ -44,7 +44,7 @@ spin_dict = {'Carded':'K',
             'Vortex':'VOR', 
             'Open-End':'OE'}
 spin_select = st.selectbox("Select Spinning Tech", list(spin_dict),  help="--to be updated--")
-selection_df = articles_df[articles_df['Construction'].str.contains(spin_dict.get(spin_select)) & articles_df['Construction'].str.contains('*')]
+selection_df = articles_df[articles_df['Construction'].str.contains(spin_dict.get(spin_select)) & articles_df['Construction'].str.contains('COM')]
 # st.dataframe(test_df)
 # selection_df = articles_df.loc[(articles_df['K1']==article_select)]
 selection_df['Warp'], selection_df['Weft'] = selection_df['Warp*Weft'].str.split("*",1).str
