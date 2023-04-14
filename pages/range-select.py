@@ -37,17 +37,20 @@ st.header("Quality Predictor")
 all_articles = articles_df['K1'].unique()
 # article_select = st.selectbox("Articles", all_articles)
 articles_df['EPI-PPI'] = articles_df['Construction'].str.extract(r'[-*/]{1}([\d]{2,3}[*][\d]{2,3})[-*\s\b]{1}')
-spin_dict = {'Carded':'K',
+spin_dict = {'Carded':'K*',
             'Carded Compact': 'K.COM', 
-            'Combed': 'C', 
+            'Combed': 'C*', 
             'Combed Compact': 'C.COM', 
-            'Vortex':'VOR', 
+            'Vortex':'VOR',
             'Open-End':'OE'}
-spin_select = st.selectbox("Select Spinning Tech", list(spin_dict),  help="--to be updated--")
-selection_df = articles_df[articles_df['Construction'].str.contains(spin_dict.get(spin_select)) & articles_df['Construction'].str.contains('COM')]
-# st.dataframe(test_df)
-# selection_df = articles_df.loc[(articles_df['K1']==article_select)]
-selection_df['Warp'], selection_df['Weft'] = selection_df['Warp*Weft'].str.split("*",1).str
+col1, col2 = st.columns(2)
+with col1:
+    warp_spin_select = st.selectbox("Warp Spinning", list(spin_dict),  help="--to be updated--")
+    # st.write(spin_dict.get(warp_spin_select))
+with col2:
+    weft_spin_select = st.selectbox("Weft Spinning", list(spin_dict),  help="--to be updated--")
+    # st.write(spin_dict.get(weft_spin_select))
+selection_df = articles_df[articles_df['Warp'].str.contains(spin_dict.get(warp_spin_select)) & articles_df['Weft'].str.contains(spin_dict.get(weft_spin_select))]
 
 #! more finer selection
 wa_match = r"\d+"
