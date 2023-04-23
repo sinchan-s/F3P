@@ -37,36 +37,43 @@ st.header("Article Reference")
 articles_df['EPI-PPI'] = articles_df['Construction'].str.extract(r'[-*/]{1}([\d]{2,3}[*][\d]{2,3})[-*\s\b]{1}')
 articles_df['GSM'] = articles_df['Construction'].str.extract(r'[\w]+[.]?([\d]{3}[.][\d]?)$')
 
-spin_dict = {'Carded':'\d+K[.]',
+spin_dict = {'Carded':'K',
             'Carded Compact': 'K.COM', 
-            'Combed': '\d+C[.]', 
+            'Combed': 'C', 
             'Combed Compact': 'C.COM', 
             'Vortex':'VOR',
             'Open-End':'OE'}
 all_weaves = articles_df['Weave'].unique()
-count_list = [6, 7, 8, 10, 12, 14, 16, 20, 21, 30, 32, 40, 45, 60, 80]
+count_list = [6, 7, 8, 10, 12, 14, 16, 20, 21, 30, 32, 40, 45, 60, 80, 100]
 
 #! selection criteria
 col1, col2, col3 = st.columns(3)
 with col1:
     warp_spin_select = st.selectbox("Warp Spinning", list(spin_dict),  help="Select the warp spinning technology employed")
-    warp_count_select = st.select_slider("Warp count", count_list, help="Select the warp count")
+    warp_count_select = str(st.select_slider("Warp count", count_list, help="Select the warp count"))
     warp_ply_check = st.checkbox('Check for double ply', key=1)
     if warp_ply_check:
-        warp_value = '2/{warp_count_select}'
+        warp_value = '2/' + warp_count_select
     else:
         warp_value = warp_count_select
+
 with col2:
     weft_spin_select = st.selectbox("Weft Spinning", list(spin_dict),  help="Select the weft spinning technology employed")
-    weft_count_select = st.select_slider("Weft count", count_list, help="Select the weft count")
+    weft_count_select = str(st.select_slider("Weft count", count_list, help="Select the weft count"))
     weft_ply_check = st.checkbox('Check for double ply', key=2)
     if weft_ply_check:
-        weft_value = '2/{weft_count_select}'
+        weft_value = '2/' + weft_count_select
     else:
         weft_value = weft_count_select
+
 with col3:
-    weave_selectbox = st.selectbox("Weave", articles_df['Weave'].unique(), help="Select the weft spinning technology employed")
-selection_df = articles_df[articles_df['Warp'].str.contains(pat = spin_dict.get(warp_spin_select)) & articles_df['Weft'].str.contains(spin_dict.get(weft_spin_select))]
+    weave_selectbox = st.selectbox("Weave", ['PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', ''], help="Select the weft spinning technology employed")
+
+warp_regex = '^'+warp_value+spin_dict.get(warp_spin_select)
+weft_regex = '^'+weft_value+spin_dict.get(weft_spin_select)
+# st.write(warp_regex)
+# st.write(weft_regex)
+selection_df = articles_df[articles_df['Warp'].str.contains(warp_regex, regex=True) & articles_df['Weft'].str.contains(weft_regex, regex=True)]
 
 #! dataframe display
 tab1, tab2 = st.tabs(['Selected Data', 'All Data'])
