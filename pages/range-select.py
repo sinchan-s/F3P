@@ -36,8 +36,12 @@ st.header("Article-Select")
 #! single column for single article select
 articles_df['EPI-PPI'] = articles_df['Construction'].str.extract(r'[-*/]{1}([\d]{2,3}[*][\d]{2,3})[-*\s\b]{1}')
 articles_df['GSM'] = articles_df['Construction'].str.extract(r'[\w]+[.]?([\d]{3}[.][\d]?)$')
+articles_df[['EPI','PPI']] = articles_df['EPI-PPI'].str.split("*", 1, expand=True)
+articles_df['EPI'] = articles_df['EPI'].fillna(0).astype('int64')
+articles_df['PPI'] = articles_df['PPI'].fillna(0).astype('int64')
 
-spin_dict = {'Carded':'K',
+spin_dict = {'All': '\w+',
+            'Carded':'K',
             'Carded Compact': 'K.COM', 
             'Combed': 'C', 
             'Combed Compact': 'C.COM', 
@@ -72,11 +76,12 @@ with col2:
         weft_regex = '^'+weft_value+spin_dict.get(weft_spin_select)
 with col3:
     with st.expander('Select Fabric Construction'):
-        epi_range = st.slider('EPI range', 50, 200, (100, 150))
+        epi_range = st.slider('EPI range', 50, 210, (100, 150))
         ppi_range = st.slider('PPI range', 50, 200, (100, 150))
         weave_selectbox = st.selectbox("Weave", ['PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', ''], help="Select the weft spinning technology employed")
 
 selection_df = articles_df[articles_df['Construction'].str.contains(weave_selectbox) & articles_df['Warp'].str.contains(warp_regex, regex=True) & articles_df['Weft'].str.contains(weft_regex, regex=True)]
+selection_df = selection_df[selection_df['EPI'].between(epi_range[0], epi_range[1]) & selection_df['PPI'].between(ppi_range[0], ppi_range[1])]
 
 #! dataframe display
 tab1, tab2 = st.tabs(['Selected Data', 'All Data'])
