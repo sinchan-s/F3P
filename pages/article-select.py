@@ -13,7 +13,7 @@ st.set_page_config(
     layout="wide",                              #! widen-out view of the layout
     initial_sidebar_state="collapsed")          #! side-bar state when page-load
 
-#! Clean Footer
+#! clean Footer
 hide_default_format = """
        <style>
        #MainMenu {visibility: hidden;}
@@ -22,16 +22,13 @@ hide_default_format = """
        """
 st.markdown(hide_default_format, unsafe_allow_html=True)
 
-#! seaborn graph styling
-sns.set_style('darkgrid')
-
-#! reading the source file
-df = pd.read_csv("main_data.csv")
-cover_df = pd.read_csv("Coverage data.csv")
+#! reading the source files
 articles_df = pd.read_csv("articles.csv")
 
 #! an apt heading
 st.header("Article-Select")
+# st.divider()
+st.subheader("Choose below parameters to get a list of articles:")
 
 #! single column for single article select
 articles_df['EPI-PPI'] = articles_df['Construction'].str.extract(r'[-*/]{1}([\d]{2,3}[*][\d]{2,3})[-*\s\b]{1}')
@@ -50,10 +47,13 @@ spin_dict = {'All': '\w+',
 all_weaves = articles_df['Weave'].unique()
 count_list = [6, 7, 8, 10, 12, 14, 16, 20, 21, 30, 32, 40, 45, 60, 80, 100]
 fibre_list = ['Cotton', 'Viscose', 'Modal', 'Polyester', 'Nylon', 'Silk']
+weave_list = ['', 'PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', 'OXFORD', 'DOUBLE CLOTH', 'BEDFORD CORD', 'RIBSTOP']
+effect_dict = {'Normal': '', 'Seer Sucker': 'SEER', 'Crepe': 'CREPE', 'Butta-Cut': 'FIL-COUPE', 'Crinkle': 'CRINKLE'}
+
 #! selection criteria
 col1, col2, col3 = st.columns(3)
 with col1:
-    with st.expander('Select Warp Params'):
+    with st.expander('Select Warp Parameters'):
         warp_fibre_select = st.multiselect("Fibre", fibre_list, default=fibre_list[0], help="Select the warp fibre")
         warp_count_select = str(st.select_slider("Count", count_list, help="Select the warp count"))
         warp_spin_select = st.selectbox("Spin-tech", list(spin_dict),  help="Select the warp spinning technology employed")
@@ -64,7 +64,7 @@ with col1:
             warp_value = warp_count_select
         warp_regex = '^'+warp_value+spin_dict.get(warp_spin_select)
 with col2:
-    with st.expander('Select Weft Params'):
+    with st.expander('Select Weft Parameters'):
         weft_fibre_select = st.multiselect("Fibre", fibre_list, default=fibre_list[0], help="Select the weft fibre")
         weft_count_select = str(st.select_slider("Count", count_list, help="Select the weft count"))
         weft_spin_select = st.selectbox("Spin-tech", list(spin_dict),  help="Select the weft spinning technology employed")
@@ -78,10 +78,12 @@ with col3:
     with st.expander('Select Fabric Construction'):
         epi_range = st.slider('EPI range', 50, 210, (100, 150))
         ppi_range = st.slider('PPI range', 50, 200, (100, 150))
-        weave_selectbox = st.selectbox("Weave", ['PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', ''], help="Select the weft spinning technology employed")
+        weave_selectbox = st.selectbox("Weave", weave_list, help="Select the fabric weave")
+        effect_selectbox = st.selectbox("Effect", list(effect_dict), help="Select any special effect on fabric")
 
-selection_df = articles_df[articles_df['Construction'].str.contains(weave_selectbox) & articles_df['Warp'].str.contains(warp_regex, regex=True) & articles_df['Weft'].str.contains(weft_regex, regex=True)]
+selection_df = articles_df[articles_df['Construction'].str.contains(weave_selectbox and effect_dict.get(effect_selectbox)) & articles_df['Warp'].str.contains(warp_regex, regex=True) & articles_df['Weft'].str.contains(weft_regex, regex=True)]
 selection_df = selection_df[selection_df['EPI'].between(epi_range[0], epi_range[1]) & selection_df['PPI'].between(ppi_range[0], ppi_range[1])]
+selection_df = selection_df.iloc[:, 0:2].set_index('K1')
 
 #! dataframe display
 tab1, tab2 = st.tabs(['Selected Data', 'All Data'])
