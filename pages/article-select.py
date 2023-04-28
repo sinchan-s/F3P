@@ -46,15 +46,15 @@ spin_dict = {'All': '\D+',
             'Open-End':'OE'}
 all_weaves = articles_df['Weave'].unique()
 count_list = [6, 7, 8, 10, 12, 14, 15, 16, 20, 21, 30, 32, 40, 45, 60, 80, 100]
-fibre_list = ['Cotton', 'Viscose', 'Modal', 'Polyester', 'Nylon', 'Silk']
-weave_list = ['PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', 'OXFORD', 'DOUBLE CLOTH', 'BEDFORD CORD', 'RIBSTOP']
-effect_dict = {'Normal': "", 'Seer Sucker': 'SUCKER', 'Crepe': 'CREPE', 'Butta-Cut': 'FIL-COUPE', 'Crinkle': 'CRINKLE'}
+fibre_dict = {'All':"", 'Viscose':"VIS", 'Modal':"MOD", 'CVC':"CVC", 'Polyester':"PET", 'Nylon':"NYL", 'Spandex/Lycra':"SPX", 'Lyocell':"LYC", 'Organic Cotton':"OG", 'Recycled Cotton':"RECY"}
+weave_list = ['PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', 'OXFORD', 'DOUBLE CLOTH', 'BEDFORD CORD', 'RIBSTOP', 'WEFTRIB']
+effect_dict = {'Normal': "", 'Seer Sucker': 'SUCKER', 'Crepe': 'CREPE', 'Butta-Cut': 'FIL-COUPE', 'Crinkle': 'CRINKLE', 'Slub':"MC"}
 
 #! selection criteria
 col1, col2, col3 = st.columns(3)
 with col1:
     with st.expander('Select Warp Parameters'):
-        warp_fibre_select = st.multiselect("Fibre", fibre_list, default=fibre_list[0], help="Select the warp fibre")
+        warp_fibre_select = st.selectbox("Fibre", list(fibre_dict), help="Select the warp fibre")
         warp_count_select = str(st.select_slider("Count", count_list, help="Select the warp count"))
         warp_spin_select = st.selectbox("Spin-tech", list(spin_dict),  help="Select the warp spinning technology employed")
         warp_ply_check = st.checkbox('Check for double ply', key=1)
@@ -63,10 +63,10 @@ with col1:
         else:
             warp_value = warp_count_select
         warp_regex = '^'+warp_value+spin_dict.get(warp_spin_select)
-    same_for_weft = st.checkbox('Same for Weft')
+    same_for_weft = st.checkbox('Same parameters for Weft')
 with col2:
     with st.expander('Select Weft Parameters'):
-        weft_fibre_select = st.multiselect("Fibre", fibre_list, default=fibre_list[0], help="Select the weft fibre")
+        weft_fibre_select = st.selectbox("Fibre", list(fibre_dict), help="Select the weft fibre")
         weft_count_select = str(st.select_slider("Count", count_list, help="Select the weft count"))
         weft_spin_select = st.selectbox("Spin-tech", list(spin_dict),  help="Select the weft spinning technology employed")
         weft_ply_check = st.checkbox('Check for double ply', key=2)
@@ -80,12 +80,18 @@ with col2:
             weft_regex = '^'+weft_value+spin_dict.get(weft_spin_select)
 with col3:
     with st.expander('Select Fabric Construction'):
-        epi_range = st.slider('EPI range', 50, 210, (100, 150))
-        ppi_range = st.slider('PPI range', 50, 200, (100, 150))
+        epi_range = st.slider('EPI range', 50, 210, (70, 150))
+        ppi_range = st.slider('PPI range', 50, 200, (70, 150))
         weave_selectbox = st.selectbox("Weave", weave_list, help="Select the fabric weave")
         effect_selectbox = st.selectbox("Effect", list(effect_dict), help="Select any special effect on fabric")
-st.write(effect_dict.get(effect_selectbox))
-selection_df = articles_df[articles_df['Construction'].str.contains(weave_selectbox) & articles_df['Construction'].str.contains(effect_dict.get(effect_selectbox)) & articles_df['Warp'].str.contains(warp_regex, regex=True) & articles_df['Weft'].str.contains(weft_regex, regex=True)]
+# st.write(effect_dict.get(effect_selectbox))
+selection_df = articles_df[articles_df['Construction'].str.contains(weave_selectbox) &
+                             articles_df['Construction'].str.contains(effect_dict.get(effect_selectbox)) & 
+                             articles_df['Warp'].str.contains(warp_regex) &
+                             articles_df['Weft'].str.contains(fibre_dict.get(warp_fibre_select)) & 
+                             articles_df['Weft'].str.contains(weft_regex) & 
+                             articles_df['Weft'].str.contains(fibre_dict.get(weft_fibre_select))]
+
 selection_df = selection_df[selection_df['EPI'].between(epi_range[0], epi_range[1]) & selection_df['PPI'].between(ppi_range[0], ppi_range[1])]
 
 #! dataframe display
