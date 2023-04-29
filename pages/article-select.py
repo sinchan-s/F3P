@@ -47,17 +47,17 @@ spin_dict = {'All': '\D+',
 all_weaves = articles_df['Weave'].unique()
 count_list = [6, 7, 8, 10, 12, 14, 15, 16, 20, 21, 30, 32, 40, 45, 60, 80, 100]
 fibre_dict = {'All':"", 'Viscose':"VIS", 'Modal':"MOD", 'CVC':"CVC", 'Polyester':"PET", 'Nylon':"NYL", 'Spandex/Lycra':"SPX", 'Lyocell':"LYC", 'Organic Cotton':"OG", 'Recycled Cotton':"RECY"}
-weave_list = ['PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', 'OXFORD', 'DOUBLE CLOTH', 'BEDFORD CORD', 'RIBSTOP', 'WEFTRIB']
+weave_list = ['', 'PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', 'OXFORD', 'DOUBLE CLOTH', 'BEDFORD CORD', 'RIBSTOP', 'WEFTRIB']
 effect_dict = {'Normal': "", 'Seer Sucker': 'SUCKER', 'Crepe': 'CREPE', 'Butta-Cut': 'FIL-COUPE', 'Crinkle': 'CRINKLE', 'Slub':"MC"}
 
 #! selection criteria
 col1, col2, col3 = st.columns(3)
 with col1:
     with st.expander('Select Warp Parameters'):
-        warp_fibre_select = st.selectbox("Fibre", list(fibre_dict), help="Dropdowndownlist  the fibre used in warp")
-        warp_count_select = str(st.select_slider("Count", count_list, help="Select the warp count"))
-        warp_spin_select = st.selectbox("Spin-tech", list(spin_dict),  help="Select the warp spinning technology employed")
-        warp_ply_check = st.checkbox('Double ply', key=1)
+        warp_fibre_select = st.selectbox("Fibre", list(fibre_dict), help="Dropdown list of fibres used in warp")
+        warp_count_select = str(st.select_slider("Count", count_list, help="Count selector: Warp"))
+        warp_spin_select = st.selectbox("Spin-tech", list(spin_dict),  help="Spinning technology of warp")
+        warp_ply_check = st.checkbox(f'2/{warp_count_select}', key=1, help="Check for doube ply warp yarn")
         if warp_ply_check:
             warp_value = '2/' + warp_count_select
         else:
@@ -66,10 +66,10 @@ with col1:
     same_for_weft = st.checkbox('Same parameters for Weft')
 with col2:
     with st.expander('Select Weft Parameters'):
-        weft_fibre_select = st.selectbox("Fibre", list(fibre_dict), help="Select the fibre used in weft")
-        weft_count_select = str(st.select_slider("Count", count_list, help="Select the weft count"))
-        weft_spin_select = st.selectbox("Spin-tech", list(spin_dict),  help="Select the weft spinning technology employed")
-        weft_ply_check = st.checkbox('Double ply', key=2)
+        weft_fibre_select = st.selectbox("Fibre", list(fibre_dict), help="Dropdown list of fibres used in weft")
+        weft_count_select = str(st.select_slider("Count", count_list, help="Count selector: Weft"))
+        weft_spin_select = st.selectbox("Spin-tech", list(spin_dict),  help="Spinning technology of weft")
+        weft_ply_check = st.checkbox(f'2/{weft_count_select}', key=2, help="Check for doube ply weft yarn")
         if same_for_weft:
             weft_regex = warp_regex
         else:
@@ -80,8 +80,8 @@ with col2:
             weft_regex = '^'+weft_value+spin_dict.get(weft_spin_select)
 with col3:
     with st.expander('Select Fabric Construction'):
-        epi_range = st.slider('EPI range', 50, 210, (70, 150))
-        ppi_range = st.slider('PPI range', 50, 200, (70, 150))
+        epi_range = st.slider('EPI range', 50, 210, (60, 150))
+        ppi_range = st.slider('PPI range', 50, 200, (60, 150))
         weave_selectbox = st.selectbox("Weave", weave_list, help="Select the fabric weave")
         effect_selectbox = st.selectbox("Effect", list(effect_dict), help="Select any special effect on fabric")
 # st.write(effect_dict.get(effect_selectbox))
