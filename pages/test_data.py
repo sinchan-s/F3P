@@ -3,8 +3,6 @@ import re
 import pandas as pd
 import numpy as np
 import streamlit as st
-import seaborn as sns
-from io import StringIO
 import matplotlib.pyplot as plt
 
 # ! basic configurations
@@ -22,9 +20,6 @@ hide_default_format = """
        </style>
        """
 st.markdown(hide_default_format, unsafe_allow_html=True)
-
-# ! seaborn graph styling
-sns.set_style('darkgrid')
 
 # ! reading the source file
 df = pd.read_csv("main_params_data.csv")
@@ -68,32 +63,21 @@ with st.expander("Data Tables", expanded=False):
         df_display = tab2.dataframe(main_df)
 
 # QTX file uploader
-qtx_file = st.file_uploader("Upload QTX format file only:", type=['qtx'], accept_multiple_files=False,
-                            help="Only upload QTX file")
+csv_file = st.file_uploader("Upload csv format file only:", type=['csv'], accept_multiple_files=False, help="Only upload CSV file")
 
-# QTX file opener
+# dataframe display
 try:
-    # converting qtx data to raw string
-    stringio = StringIO(qtx_file.getvalue().decode("utf-8"))
-    string_data = stringio.read()
-    with st.expander('Raw data: ', expanded=False):
-        st.write(string_data)
-    # values extraction using regex
-    std_name = re.findall("STD_NAME=(.+)", string_data)
-    list_ref_low = re.findall("STD_REFLLOW=(\d+),", string_data)
-    list_ref_pts = re.findall("STD_REFLPOINTS=(\d+),", string_data)
-    list_ref_int = re.findall("STD_REFLINTERVAL=(\d+),", string_data)
-    list_ref_vals = re.findall("STD_R[=,](.+)", string_data)
-    # color std selection & graph display
-    name_select = st.selectbox("Select Color", std_name)
-    std_i = std_name.index(name_select)
-    ref_low, ref_pts, ref_int = int(list_ref_low[std_i]), int(list_ref_pts[std_i]), int(list_ref_int[std_i])
-    ref_max = ref_low + ref_pts * ref_int
-    y_ref_val_list = str(list_ref_vals[std_i]).split(',')
-    x_wave_list = [k for k in range(ref_low, ref_max, ref_int)]
-    sd_df = pd.DataFrame(y_ref_val_list, index=x_wave_list, columns=[name_select])
-    sd_df[name_select] = sd_df[name_select].astype('float64')
-    st.line_chart(sd_df)
-    color = st.color_picker('Standard Color', '#00f900')
+    up_file = pd.read_csv(csv_file)
+    # st.write(list(map(str.lower, up_file.columns)))
+    if 'construction' in list(map(str.lower, up_file.columns)):
+        up_file['WARP'] = up_file['construction'].str.extract(r'^([\d\w\s+\/()]*)[*]')
+        up_file['WEFT'] = up_file['construction'].str.extract(r'^[\d\w\s+\/()]*[*]([\d\w[+\/\s()]+)')
+        up_file['EPI'] = up_file['construction'].str.extract(r'[-](\d{2,3})[*]')
+        up_file['PPI'] = up_file['construction'].str.extract(r'[*](\d{2,3})[-]')
+        up_file['WIDTH'] = up_file['construction'].str.extract(r'[-*](\d{3}\.?\d{0,2})-')
+        up_file['WEAVE'] = up_file['construction'].str.extract(r'-(\d?\/?\d?\s?[A-Z]+\s?[A-Z]*\(?[A-Z\s]+\)?)')
+        up_file['GSM'] = up_file['construction'].str.extract(r'[-\s](\d{3}\.?\d?)[\s$]*$')
+    st.dataframe(up_file)
+    
 except:
     st.write("Upload a file !")
