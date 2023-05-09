@@ -68,15 +68,17 @@ csv_file = st.file_uploader("Upload csv format file only:", type=['csv'], accept
 # dataframe display
 try:
     up_file = pd.read_csv(csv_file)
-    # st.write(list(map(str.lower, up_file.columns)))
-    if 'construction' in list(map(str.lower, up_file.columns)):
-        up_file['WARP'] = up_file['construction'].str.extract(r'^([\d\w\s+\/()]*)[*]')
-        up_file['WEFT'] = up_file['construction'].str.extract(r'^[\d\w\s+\/()]*[*]([\d\w[+\/\s()]+)')
-        up_file['EPI'] = up_file['construction'].str.extract(r'[-](\d{2,3})[*]')
-        up_file['PPI'] = up_file['construction'].str.extract(r'[*](\d{2,3})[-]')
-        up_file['WIDTH'] = up_file['construction'].str.extract(r'[-*](\d{3}\.?\d{0,2})-')
-        up_file['WEAVE'] = up_file['construction'].str.extract(r'-(\d?\/?\d?\s?[A-Z]+\s?[A-Z]*\(?[A-Z\s]+\)?)')
-        up_file['GSM'] = up_file['construction'].str.extract(r'[-\s](\d{3}\.?\d?)[\s$]*$')
+    col_list = list(map(str.lower, up_file.columns))
+    if 'construction' in col_list:
+        const_index = col_list.index('construction')
+        # st.write(const_index)
+        up_file['WARP'] = up_file.iloc[:, const_index].str.extract(r'^([\d\w\s+.\/()]*)[*]')
+        up_file['WEFT'] = up_file.iloc[:, const_index].str.extract(r'^[\d\w\s+.\/()]*[*]([\d\w\s+.\/()]+)')
+        up_file['EPI'] = up_file.iloc[:, const_index].str.extract(r'[-](\d{2,3})[*]')
+        up_file['PPI'] = up_file.iloc[:, const_index].str.extract(r'[*](\d{2,3})[-]')
+        up_file['WIDTH'] = up_file.iloc[:, const_index].str.extract(r'[-*](\d{3}\.?\d{0,2})-')
+        up_file['WEAVE'] = up_file.iloc[:, const_index].str.extract(r'-(\d?\/?\d?[,\s]?[A-Z]+\s?[A-Z]*\(?[A-Z\s]+\)?)')
+        up_file['GSM'] = up_file.iloc[:, const_index].str.extract(r'[-\s](\d{3}\.?\d?)[\s$]*$')
     st.dataframe(up_file)
     
 except:
