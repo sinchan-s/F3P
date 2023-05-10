@@ -34,34 +34,6 @@ main_df['style'] = [
 st.header("experimentation tab")
 
 
-# ! column-wise split: article selection & finsih-style selection
-col1, col2, col3 = st.columns(3)
-
-try:
-    all_articles = main_df['Article No.'].unique()
-    article_selectbox = col1.multiselect("Select Article:", sorted(all_articles), default=all_articles[0],
-                                         help="Choose one or more articles to see the data table")
-    article_df = main_df[main_df['Article No.'].isin(article_selectbox)]
-    finish = col2.multiselect("Select Finish Code:", article_df.Pattern.unique(),
-                              default=article_df.Pattern.unique()[0],
-                              help="Choose one or more finish codes to see the data table")
-    style = col3.radio("Select Style:", article_df['style'].unique(), help="Choose any print style")
-    # st.write(f"debug : {finish}")
-    selection_df = main_df.loc[(main_df['Article No.'].isin(article_selectbox)) & (main_df['Pattern'].isin(finish)) & (
-            main_df['style'] == style)]
-except:
-    st.error("Please select data to display 👆")
-
-# ! dataframe display
-with st.expander("Data Tables", expanded=False):
-    tab1, tab2 = st.tabs(["Selected Data", "All Data"])
-    try:
-        df_display = tab1.dataframe(selection_df)
-    except:
-        st.warning("No data to show but still you can see All Data")
-    finally:
-        df_display = tab2.dataframe(main_df)
-
 # QTX file uploader
 csv_file = st.file_uploader("Upload csv format file only:", type=['csv'], accept_multiple_files=False, help="Only upload CSV file")
 
@@ -79,7 +51,7 @@ try:
         up_file['WIDTH'] = up_file.iloc[:, const_index].str.extract(r'[-*](\d{3}\.?\d{0,2})-')
         up_file['WEAVE'] = up_file.iloc[:, const_index].str.extract(r'-(\d?\/?\d?[,\s]?[A-Z]+\s?[A-Z]*\(?[A-Z\s]+\)?)')
         up_file['GSM'] = up_file.iloc[:, const_index].str.extract(r'[-\s](\d{3}\.?\d?)[\s$]*$')
-    st.dataframe(up_file)
-    
+        with st.expander('Data Table'):
+            st.dataframe(up_file)
 except:
     st.write("Upload a file !")
