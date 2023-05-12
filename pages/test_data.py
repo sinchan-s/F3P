@@ -34,22 +34,15 @@ main_df['style'] = [
 st.header("experimentation tab")
 
 #! dropdown lists & dicts
-spin_dict = {'All': '\D+',
-            'Carded':'K',
-            'Carded Compact': 'K.COM', 
-            'Combed': 'C', 
-            'Combed Compact': 'C.COM', 
-            'Vortex':'VOR',
-            'Open-End':'OE'}
-# all_weaves = articles_df['Weave'].unique()
-count_list = [6, 7, 8, 10, 12, 14, 15, 16, 20, 21, 30, 32, 40, 45, 60, 80, 100]
-fibre_dict = {'All':"", 'Viscose':"VIS", 'Modal':"MOD", 'CVC':"CVC", 'Polyester':"PET", 'PC-Blend':"PC", 'Nylon':"NYL", 'Spandex/Lycra':"SPX", 'Lyocell':"LYC", 'Organic Cotton':"OG", 'Recycled Cotton':"RECY", 'Multi-Count':"MC"}
-weave_list = ['', 'PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', 'OXFORD', 'DOUBLE CLOTH', 'BEDFORD CORD', 'RIBSTOP', 'WEFTRIB']
+spin_dict = {'All': '\D+', 'Carded':'K', 'Carded Compact': 'K.COM', 'Combed': 'C', 'Combed Compact': 'C.COM', 'Vortex':'VOR', 'Open-End':'OE'}
 effect_dict = {'Normal': "", 'Seer Sucker': 'SUCKER', 'Crepe': 'CREPE', 'Butta-Cut': 'FIL-COUPE', 'Crinkle': 'CRINKLE', 'Slub':"MC"}
-
+fibre_dict = {'All':"", 'Viscose':"VIS", 'Modal':"MOD", 'CVC':"CVC", 'Polyester':"PET", 'PC-Blend':"PC", 'Nylon':"NYL", 'Spandex/Lycra':"SPX", 'Lyocell':"LYC", 'Organic Cotton':"OG", 'Recycled Cotton':"RECY", 'Multi-Count':"MC"}
+count_list = [6, 7, 8, 10, 12, 14, 15, 16, 20, 21, 30, 32, 40, 45, 60, 80, 100]
+weave_list = ['', 'PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', 'OXFORD', 'DOUBLE CLOTH', 'BEDFORD CORD', 'RIBSTOP', 'WEFTRIB']
 
 #! QTX file uploader
 uploaded_file = st.file_uploader("Upload csv format file only:", type=['csv'], accept_multiple_files=False, help="Only upload CSV file")
+# articles_df = pd.read_csv("articles.csv")
 
 #! dataframe display
 try:
@@ -65,8 +58,10 @@ try:
         data_file['WIDTH'] = data_file.iloc[:, const_index].str.extract(r'[-*](\d{3}\.?\d{0,2})-')
         data_file['WEAVE'] = data_file.iloc[:, const_index].str.extract(r'-(\d?\/?\d?[,\s]?[A-Z]+\s?[A-Z]*\(?[A-Z\s]+\)?)')
         data_file['GSM'] = data_file.iloc[:, const_index].str.extract(r'[-\s](\d{3}\.?\d?)[\s$]*$')
+        
         tab1, tab2 = st.tabs(["Selection Data","File Data"])
         with tab1:
+            st.write('testing under process')
             col1, col2, col3 = st.columns(3)
             
             #! selection parameters
@@ -112,10 +107,9 @@ try:
                                     data_file['WEFT'].str.contains(fibre_dict.get(weft_fibre_select))]
 
             selection_df = selection_df[selection_df['EPI'].between(epi_range[0], epi_range[1]) & selection_df['PPI'].between(ppi_range[0], ppi_range[1])]
-            # selection_df = selection_df.iloc[:, 0:2].set_index('K1')
-            df_display = st.table(selection_df)
+            selection_df = selection_df.iloc[:, 0:2].set_index('K1')
+            st.table(selection_df)
         with tab2:
-                st.dataframe(data_file)
-
+            st.dataframe(data_file)
 except:
     st.write("Upload a file !")
