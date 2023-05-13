@@ -2,8 +2,6 @@
 #! important librabries
 import pandas as pd
 import streamlit as st
-import seaborn as sns
-import matplotlib.pyplot as plt
 import re
 
 #! basic configurations
@@ -30,13 +28,22 @@ st.header("Article-Select")
 # st.divider()
 st.subheader("Choose below parameters to get a list of articles:")
 
-#! single column for single article select
-articles_df['EPI-PPI'] = articles_df['Construction'].str.extract(r'[-*/]{1}([\d]{2,3}[*][\d]{2,3})[-*\s\b]{1}')
-articles_df['GSM'] = articles_df['Construction'].str.extract(r'[\w]+[.]?([\d]{3}[.][\d]?)$')
-articles_df[['EPI','PPI']] = articles_df['EPI-PPI'].str.split("*", 1, expand=True)
-articles_df['EPI'] = articles_df['EPI'].fillna(0).astype('int64')
-articles_df['PPI'] = articles_df['PPI'].fillna(0).astype('int64')
+#! column extraction from construction column
+def column_ext(data_file):
+    col_list = list(map(str.lower, data_file.columns))
+    if 'construction' in col_list:
+        const_index = col_list.index('construction')
+        data_file['WARP'] = data_file.iloc[:, const_index].str.extract(r'^([\d\w\s+.\/()]*)[*]')
+        data_file['WEFT'] = data_file.iloc[:, const_index].str.extract(r'^[\d\w\s+.\/()]*[*]([\d\w\s+.\/()]+)')
+        data_file['EPI'] = data_file.iloc[:, const_index].str.extract(r'[-](\d{2,3})[*]').astype('float64')
+        data_file['PPI'] = data_file.iloc[:, const_index].str.extract(r'[*](\d{2,3})[-]').astype('float64')
+        data_file['WIDTH'] = data_file.iloc[:, const_index].str.extract(r'[-*](\d{3}\.?\d{0,2})-').astype('float64')
+        data_file['WEAVE'] = data_file.iloc[:, const_index].str.extract(r'-(\d?\/?\d?[,\s]?[A-Z]+\s?[A-Z]*\(?[A-Z\s]+\)?)')
+        data_file['GSM'] = data_file.iloc[:, const_index].str.extract(r'[-\s](\d{3}\.?\d?)[\s$]*$').astype('float64')
 
+st.dataframe(column_ext(articles_df))
+
+#! dropdown lists & dicts
 spin_dict = {'All': '\D+',
             'Carded':'K',
             'Carded Compact': 'K.COM', 
@@ -44,7 +51,7 @@ spin_dict = {'All': '\D+',
             'Combed Compact': 'C.COM', 
             'Vortex':'VOR',
             'Open-End':'OE'}
-all_weaves = articles_df['Weave'].unique()
+# all_weaves = articles_df['Weave'].unique()
 count_list = [6, 7, 8, 10, 12, 14, 15, 16, 20, 21, 30, 32, 40, 45, 60, 80, 100]
 fibre_dict = {'All':"", 'Viscose':"VIS", 'Modal':"MOD", 'CVC':"CVC", 'Polyester':"PET", 'PC-Blend':"PC", 'Nylon':"NYL", 'Spandex/Lycra':"SPX", 'Lyocell':"LYC", 'Organic Cotton':"OG", 'Recycled Cotton':"RECY", 'Multi-Count':"MC"}
 weave_list = ['', 'PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', 'OXFORD', 'DOUBLE CLOTH', 'BEDFORD CORD', 'RIBSTOP', 'WEFTRIB']
@@ -87,10 +94,10 @@ with col3:
 # st.write(effect_dict.get(effect_selectbox))
 selection_df = articles_df[articles_df['Construction'].str.contains(weave_selectbox) &
                              articles_df['Construction'].str.contains(effect_dict.get(effect_selectbox)) & 
-                             articles_df['Warp'].str.contains(warp_regex) &
-                             articles_df['Weft'].str.contains(fibre_dict.get(warp_fibre_select)) & 
-                             articles_df['Weft'].str.contains(weft_regex) & 
-                             articles_df['Weft'].str.contains(fibre_dict.get(weft_fibre_select))]
+                             articles_df['WARP'].str.contains(warp_regex) &
+                             articles_df['WEFT'].str.contains(fibre_dict.get(warp_fibre_select)) & 
+                             articles_df['WEFT'].str.contains(weft_regex) & 
+                             articles_df['WEFT'].str.contains(fibre_dict.get(weft_fibre_select))]
 
 selection_df = selection_df[selection_df['EPI'].between(epi_range[0], epi_range[1]) & selection_df['PPI'].between(ppi_range[0], ppi_range[1])]
 
