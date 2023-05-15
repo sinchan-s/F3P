@@ -50,7 +50,6 @@ try:
     col_list = list(map(str.lower, data_file.columns))
     if 'construction' in col_list:
         const_index = col_list.index('construction')
-        # st.write(const_index)
         data_file['WARP'] = data_file.iloc[:, const_index].str.extract(r'^([\d\w\s+.\/()]*)[*]')
         data_file['WEFT'] = data_file.iloc[:, const_index].str.extract(r'^[\d\w\s+.\/()]*[*]([\d\w\s+.\/()]+)')
         data_file['EPI'] = data_file.iloc[:, const_index].str.extract(r'[-](\d{2,3})[*]')
@@ -97,7 +96,6 @@ try:
                     ppi_range = st.slider('PPI range', 50, 200, (60, 150))
                     weave_selectbox = st.selectbox("Weave", weave_list, help="Select the fabric weave")
                     effect_selectbox = st.selectbox("Effect", list(effect_dict), help="Select any special effect on fabric")
-
             #! selecting data based on above parameters
             selection_df = data_file[data_file['WEAVE'].str.contains(weave_selectbox) &
                                     data_file['WEAVE'].str.contains(effect_dict.get(effect_selectbox)) & 
@@ -107,9 +105,37 @@ try:
                                     data_file['WEFT'].str.contains(fibre_dict.get(weft_fibre_select))]
 
             selection_df = selection_df[selection_df['EPI'].between(epi_range[0], epi_range[1]) & selection_df['PPI'].between(ppi_range[0], ppi_range[1])]
-            selection_df = selection_df.iloc[:, 0:2].set_index('K1')
+            # selection_df = selection_df.iloc[:, 0:2].set_index(selection_df.columns[0])
+            # st.write('check')
             st.table(selection_df)
         with tab2:
             st.dataframe(data_file)
 except:
     st.write("Upload a file !")
+
+print_df = pd.read_csv('yd_articles.csv')
+yd_df = pd.read_csv('yd_articles2.csv')
+yd_print_df = pd.read_csv('yd_print_articles.csv')
+
+col1, col2, col3 = st.columns(3)
+yd_articles = yd_df['k1'].unique()
+yd_print_articles = yd_print_df['k1'].unique()
+print_articles = print_df['k1'].unique()
+
+with col1:
+    select_yd_article = st.selectbox("Select YD Article:", yd_articles)
+with col2:
+    select_yd_print_article = st.selectbox("Select YD-Print Article:", yd_print_articles)
+with col3:
+    select_print_article = st.selectbox("Select Print Article:", print_articles)
+
+yd_selection_df = yd_df.loc[(yd_df['k1']==select_yd_article)]
+yd_print_selection_df = yd_print_df.loc[(yd_print_df['k1']==select_yd_print_article)]
+print_selection_df = print_df.loc[(print_df['k1']==select_print_article)]
+
+with col1:
+    st.dataframe(yd_selection_df)
+with col2:
+    st.dataframe(yd_print_selection_df)
+with col3:
+    st.dataframe(print_selection_df)
