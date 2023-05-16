@@ -25,7 +25,6 @@ articles_df = pd.read_csv("articles.csv")
 
 #! an apt heading
 st.header("Article-Select")
-# st.divider()
 st.subheader("Choose below parameters to get a list of articles:")
 
 #! column extraction from construction column
@@ -41,17 +40,11 @@ def column_ext(data_file):
         data_file['WEAVE'] = data_file.iloc[:, const_index].str.extract(r'-(\d?\/?\d?[,\s]?[A-Z]+\s?[A-Z]*\(?[A-Z\s]+\)?)')
         data_file['GSM'] = data_file.iloc[:, const_index].str.extract(r'[-\s](\d{3}\.?\d?)[\s$]*$').astype('float64')
 
-st.dataframe(column_ext(articles_df))
+article_df = column_ext(articles_df)
+# st.dataframe(article_df)
 
 #! dropdown lists & dicts
-spin_dict = {'All': '\D+',
-            'Carded':'K',
-            'Carded Compact': 'K.COM', 
-            'Combed': 'C', 
-            'Combed Compact': 'C.COM', 
-            'Vortex':'VOR',
-            'Open-End':'OE'}
-# all_weaves = articles_df['Weave'].unique()
+spin_dict = {'All': '\D+', 'Carded':'K', 'Carded Compact': 'K.COM', 'Combed': 'C', 'Combed Compact': 'C.COM', 'Vortex':'VOR', 'Open-End':'OE'}
 count_list = [6, 7, 8, 10, 12, 14, 15, 16, 20, 21, 30, 32, 40, 45, 60, 80, 100]
 fibre_dict = {'All':"", 'Viscose':"VIS", 'Modal':"MOD", 'CVC':"CVC", 'Polyester':"PET", 'PC-Blend':"PC", 'Nylon':"NYL", 'Spandex/Lycra':"SPX", 'Lyocell':"LYC", 'Organic Cotton':"OG", 'Recycled Cotton':"RECY", 'Multi-Count':"MC"}
 weave_list = ['', 'PLAIN', 'TWILL', 'SATIN', 'DOBBY', 'CVT', 'MATT', 'HBT', 'BKT', 'OXFORD', 'DOUBLE CLOTH', 'BEDFORD CORD', 'RIBSTOP', 'WEFTRIB']
@@ -91,7 +84,7 @@ with col3:
         ppi_range = st.slider('PPI range', 50, 200, (60, 150))
         weave_selectbox = st.selectbox("Weave", weave_list, help="Select the fabric weave")
         effect_selectbox = st.selectbox("Effect", list(effect_dict), help="Select any special effect on fabric")
-# st.write(effect_dict.get(effect_selectbox))
+
 selection_df = articles_df[articles_df['Construction'].str.contains(weave_selectbox) &
                              articles_df['Construction'].str.contains(effect_dict.get(effect_selectbox)) & 
                              articles_df['WARP'].str.contains(warp_regex) &
@@ -105,6 +98,6 @@ selection_df = selection_df[selection_df['EPI'].between(epi_range[0], epi_range[
 tab1, tab2 = st.tabs(['Selected Data', 'All Data'])
 with tab1:
     selection_df = selection_df.iloc[:, 0:2].set_index('K1')
-    df_display = st.table(selection_df)
+    df_display = st.dataframe(selection_df)
 with tab2:
     df_display = st.dataframe(articles_df)
