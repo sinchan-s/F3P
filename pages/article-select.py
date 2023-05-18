@@ -28,19 +28,21 @@ st.header("Article-Select")
 st.subheader("Choose below parameters to get a list of articles:")
 
 #! column extraction from construction column
-def column_ext(data_file):
-    col_list = list(map(str.lower, data_file.columns))
-    if 'construction' in col_list:
-        const_index = col_list.index('construction')
-        data_file['WARP'] = data_file.iloc[:, const_index].str.extract(r'^([\d\w\s+.\/()]*)[*]')
-        data_file['WEFT'] = data_file.iloc[:, const_index].str.extract(r'^[\d\w\s+.\/()]*[*]([\d\w\s+.\/()]+)')
-        data_file['EPI'] = data_file.iloc[:, const_index].str.extract(r'[-](\d{2,3})[*]').astype('float64')
-        data_file['PPI'] = data_file.iloc[:, const_index].str.extract(r'[*](\d{2,3})[-]').astype('float64')
-        data_file['WIDTH'] = data_file.iloc[:, const_index].str.extract(r'[-*](\d{3}\.?\d{0,2})-').astype('float64')
-        data_file['WEAVE'] = data_file.iloc[:, const_index].str.extract(r'-(\d?\/?\d?[,\s]?[A-Z]+\s?[A-Z]*\(?[A-Z\s]+\)?)')
-        data_file['GSM'] = data_file.iloc[:, const_index].str.extract(r'[-\s](\d{3}\.?\d?)[\s$]*$').astype('float64')
+#! function to extractor columns 
+def col_ext(df_file):
+    all_columns = list(map(str.lower, df_file.columns))
+    if 'construction' in all_columns:
+        ext_index = all_columns.index('construction')
+        df_file['warp'] = df_file.iloc[:, ext_index].str.extract(r'^([\d\w\s+.\/()]*)[*]')
+        df_file['weft'] = df_file.iloc[:, ext_index].str.extract(r'^[\d\w\s+.\/()]*[*]([\d\w\s+.\/()]+)')
+        df_file['epi'] = df_file.iloc[:, ext_index].str.extract(r'[-](\d{2,3})[*]').astype('float64')
+        df_file['ppi'] = df_file.iloc[:, ext_index].str.extract(r'[*](\d{2,3})[-]').astype('float64')
+        df_file['width'] = df_file.iloc[:, ext_index].str.extract(r'[-*](\d{3}\.?\d{0,2})-').astype('float64')
+        df_file['weave'] = df_file.iloc[:, ext_index].str.extract(r'-(\d?\/?\d?[,\s]?[A-Z]+\s?[A-Z]*\(?[A-Z\s]+\)?)')
+        df_file['gsm'] = df_file.iloc[:, ext_index].str.extract(r'[-\s](\d{3}\.?\d?)[\s$]*$').astype('float64')
+    return df_file
 
-article_df = column_ext(articles_df)
+article_df = col_ext(articles_df)
 # st.dataframe(article_df)
 
 #! dropdown lists & dicts
@@ -87,17 +89,17 @@ with col3:
 
 selection_df = articles_df[articles_df['Construction'].str.contains(weave_selectbox) &
                              articles_df['Construction'].str.contains(effect_dict.get(effect_selectbox)) & 
-                             articles_df['WARP'].str.contains(warp_regex) &
-                             articles_df['WEFT'].str.contains(fibre_dict.get(warp_fibre_select)) & 
-                             articles_df['WEFT'].str.contains(weft_regex) & 
-                             articles_df['WEFT'].str.contains(fibre_dict.get(weft_fibre_select))]
+                             articles_df['warp'].str.contains(warp_regex) &
+                             articles_df['warp'].str.contains(fibre_dict.get(warp_fibre_select)) & 
+                             articles_df['weft'].str.contains(weft_regex) & 
+                             articles_df['weft'].str.contains(fibre_dict.get(weft_fibre_select))]
 
-selection_df = selection_df[selection_df['EPI'].between(epi_range[0], epi_range[1]) & selection_df['PPI'].between(ppi_range[0], ppi_range[1])]
+selection_df = selection_df[selection_df['epi'].between(epi_range[0], epi_range[1]) & selection_df['ppi'].between(ppi_range[0], ppi_range[1])]
 
 #! dataframe display
 tab1, tab2 = st.tabs(['Selected Data', 'All Data'])
 with tab1:
     selection_df = selection_df.iloc[:, 0:2].set_index('K1')
-    df_display = st.dataframe(selection_df)
+    df_display = st.table(selection_df)
 with tab2:
     df_display = st.dataframe(articles_df)
