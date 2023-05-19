@@ -87,6 +87,7 @@ with col3:
         ppi_range = st.slider('PPI range', 50, 200, (60, 150))
         weave_selectbox = st.selectbox("Weave", weave_list, help="Select the fabric weave")
         effect_selectbox = st.selectbox("Effect", list(effect_dict), help="Select any special effect on fabric")
+        gsm_range = st.slider('GSM range', 120, 350, (150, 200))
 
 selection_df = articles_df[articles_df['Construction'].str.contains(weave_selectbox) &
                              articles_df['Construction'].str.contains(effect_dict.get(effect_selectbox)) & 
@@ -95,10 +96,10 @@ selection_df = articles_df[articles_df['Construction'].str.contains(weave_select
                              articles_df['weft'].str.contains(weft_regex) & 
                              articles_df['weft'].str.contains(fibre_dict.get(weft_fibre_select))]
 
-selection_df = selection_df[selection_df['epi'].between(epi_range[0], epi_range[1]) & selection_df['ppi'].between(ppi_range[0], ppi_range[1])]
+selection_df = selection_df[selection_df['gsm'].between(gsm_range[0], gsm_range[1]) & selection_df['epi'].between(epi_range[0], epi_range[1]) & selection_df['ppi'].between(ppi_range[0], ppi_range[1])]
 
 #! dataframe display
-tab1, tab2 = st.tabs(['Selected Data', 'All Data'])
+tab1, tab2 = st.tabs(['Filtered Data', 'All Data'])
 with tab1:
     selection_df = selection_df.set_index('K1')
     df_display = st.table(selection_df)
