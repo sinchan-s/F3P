@@ -1,6 +1,7 @@
 
 #! important librabries
 import pandas as pd
+import numpy as np
 import streamlit as st
 import re
 
@@ -99,7 +100,7 @@ selection_df = selection_df[selection_df['epi'].between(epi_range[0], epi_range[
 #! dataframe display
 tab1, tab2 = st.tabs(['Selected Data', 'All Data'])
 with tab1:
-    selection_df = selection_df.iloc[:, 0:2].set_index('K1')
+    selection_df = selection_df.set_index('K1')
     df_display = st.table(selection_df)
 with tab2:
     df_display = st.dataframe(articles_df)
