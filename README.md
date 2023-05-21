@@ -10,7 +10,7 @@ App-link : [here](https://fabric-param-predictor.streamlit.app/)
 ![image](https://user-images.githubusercontent.com/63915540/200895108-c624bc20-99f3-496b-be75-030cf57a7fa0.png)
 
 ### Range-Select:
-![image](https://user-images.githubusercontent.com/63915540/236892080-884f76a4-beff-4bc9-b9e9-c3b9d7dadb10.png)
+![image](https://github.com/sinchan-s/F3P/assets/63915540/ac30b137-0bc0-4216-90d9-80d3504d10fb)
 
 ### Test-data:
-![image](https://user-images.githubusercontent.com/63915540/200897622-370458df-c733-4e45-b926-46121644aa56.png)
+![image](https://github.com/sinchan-s/F3P/assets/63915540/33cffd3a-c8fd-4c2e-b44a-5646fe4d89c1)
