@@ -130,9 +130,9 @@ yd_print_articles = yd_print_df['k1'].unique()
 # print_articles = print_df['k1'].unique()
 
 with col1:
-    select_yd_article = st.selectbox("Select YD Article:", yd_articles)
+    select_yd_article = st.selectbox("All YD Articles:", yd_articles)
 with col2:
-    select_yd_print_article = st.selectbox("Select YD-Print Article:", yd_print_articles)
+    select_yd_print_article = st.selectbox("All YD-Print Articles:", yd_print_articles)
 # with col3:
     # select_print_article = st.selectbox("Select Print Article:", print_articles)
 
