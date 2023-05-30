@@ -13,4 +13,7 @@ App-link : [here](https://fabric-param-predictor.streamlit.app/)
 ![image](https://github.com/sinchan-s/F3P/assets/63915540/ac30b137-0bc0-4216-90d9-80d3504d10fb)
 
 ### Test-data:
+(1)
+![image](https://github.com/sinchan-s/F3P/assets/63915540/b7860317-af8b-4c8d-9cdb-f84aa74e8862)
+(2)
 ![image](https://github.com/sinchan-s/F3P/assets/63915540/33cffd3a-c8fd-4c2e-b44a-5646fe4d89c1)
