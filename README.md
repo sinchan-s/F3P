@@ -1,7 +1,7 @@
-# F3P = Fabric Physical Parameters Predictor   
+# Fabric Physical Parameters Predictor (F3P)   
 
-A simple web-dashboard based on streamlit to check & predict various fabric parameters based on different selection of qualities.   
-App-link : [here](https://fabric-param-predictor.streamlit.app/)   
+A simple web-based dashboard built on streamlit/python to check & predict various fabric parameters based on different selection of qualities.   
+App-link : [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fabric-param-predictor.streamlit.app//)   
 
 ### Main page:
 (1)
